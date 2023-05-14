@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-interface ITag {
+
+export interface ITag {
   id: string;
   title: string;
   score: string;
 }
 
-function Tags(props: { items: ITag[]; setItems: any; }) {
-  
-  const items = props.items
-  const setItems = props.setItems
+interface TagsProps {
+  items: Array<ITag>;
+  setItems: React.Dispatch<React.SetStateAction<Array<ITag>>>;
+}
 
+const  Tags: React.FC<TagsProps> = ({ items, setItems }) => {
+  
   const handleAddItem = () => {
-    console.log(items)
-    setItems([...items, { id: '', title: '' , score: ''}]);
+    setItems([...items, { id: '', title: '' , score: ''}])
   };
 
   const handleRemoveItem = (index: number) => {
@@ -28,12 +30,11 @@ function Tags(props: { items: ITag[]; setItems: any; }) {
     setItems(newItems);
   };
   
-
   return (
     <div> 
       {items.map((item, index) => (
+        <div key={index}>
         <div><label htmlFor={`Tag ${index}`}>Tag {index}:</label>
-          <div key={index}>
           <input
             type="text"
             value={item.id}
@@ -60,7 +61,7 @@ function Tags(props: { items: ITag[]; setItems: any; }) {
           </div>
         </div>
       ))}
-      <button type="button" onClick={handleAddItem}>
+      <button type="button" onClick={() => handleAddItem()}>
         Add Tag
       </button>
     </div>
