@@ -7,6 +7,11 @@ export interface IDescription {
     "contentType": string
   };
 
+export const emptyDescription = () => {
+  return {
+    "id": '', "title": '', "content": '', "contentType": ''
+  }
+};
 
 interface DescriptionProps {
   items: IDescription;
@@ -15,7 +20,7 @@ interface DescriptionProps {
 
 const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
 
-    const handleInputChange = (field: keyof IDescription, value: string) => {
+    const handleInputChange = (field: string, value: string) => {
         const newItems = {...items};
         newItems[field] = value;
         setItems(newItems);
@@ -23,37 +28,14 @@ const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
 
     return (
         <div>
+          {Object.keys(emptyDescription()).map(keyname => (
           <div>
           <input
             type="text"
-            value={items.id}
-            placeholder='id'
-            onChange={(e) => handleInputChange('id', e.target.value)}
-          /></div>  
-          <div>
-          <input
-            type="text"
-            value={items.title}
-            placeholder='title'
-            onChange={(e) => handleInputChange('title', e.target.value)}
-          />
-          </div>
-          <div>
-          <input
-            type="text"
-            value={items.content}
-            placeholder='content'
-            onChange={(e) => handleInputChange('content', e.target.value)}
-          />
-          </div>
-          <div>
-          <input
-            type="text"
-            value={items.contentType}
-            placeholder='contentType'
-            onChange={(e) => handleInputChange('contentType', e.target.value)}
-          />
-          </div>
+            value={items[keyname]}
+            placeholder={keyname}
+            onChange={(e) => handleInputChange(keyname, e.target.value)}
+          /></div> ))} 
         </div>
     )
 };

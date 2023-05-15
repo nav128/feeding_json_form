@@ -3,25 +3,28 @@ import { saveAs } from 'file-saver';
 //@ts-ignore
 import Tags, {ITag} from './Tags.tsx';
 //@ts-ignore
-import Description, {IDescription} from './Description.tsx';
+import Description, {IDescription, emptyDescription} from './Description.tsx';
+//@ts-ignore
+import Answeres, {IAnswere} from './answers.tsx';
+
+
 
 const Form: React.FC = () => {
   const [tagslist, setTags] = useState<Array<ITag>>([]);
-  const [problemDescription, setPD] = useState<IDescription>({
-    "id": '', "title": '', "content": '', "contentType": ''
-  });
+  const [answerslist, setAnsweres] = useState<Array<IAnswere>>([]);
+  const [problemDescription, setPD] = useState<IDescription>(emptyDescription);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log({"desc": problemDescription, "tags": tagslist})
+
     e.preventDefault();
     // Gather form data
     const formData = {
       'problemDescription': problemDescription,
-      'tags': tagslist
+      'tags': tagslist,
+      'answeres': answerslist
     };
 
     const blob = new Blob([JSON.stringify(formData)]);
-  
     // Save the file using FileSaver.js
     saveAs(blob, 'form-data.json');
   };
@@ -32,6 +35,7 @@ const Form: React.FC = () => {
         <Description items = {problemDescription} setItems = {setPD}/>
         </div>
       <Tags items = {tagslist} setItems = {setTags}/>
+      <Answeres items = {answerslist} setItems = {setAnsweres} />
       <div><button type="submit">Submit</button></div>
     </form>
   );

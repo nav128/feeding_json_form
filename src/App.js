@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import {Form} from './Form.tsx'
+import Form from './Form.tsx'
 import FileSaver from 'file-saver';
 
 
