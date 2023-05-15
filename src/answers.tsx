@@ -20,7 +20,7 @@ interface AnsweresProps {
 }
 
 const  Answeres: React.FC<AnsweresProps> = GenericList(
-    {'initialValues': emptyAnswere, 'single': 'Answere'}
+    {'initialValues': emptyAnswere, 'single': 'Answere', 'fixed': 4}
     );
 
 export default Answeres;

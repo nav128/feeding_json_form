@@ -17,6 +17,6 @@ interface TagsProps {
   setItems: React.Dispatch<React.SetStateAction<Array<ITag>>>;
 }
 
-const  Tags: React.FC<TagsProps> = GenericList({'initialValues': emptyTags, 'single': 'Tag'});
+const  Tags: React.FC<TagsProps> = GenericList({'initialValues': emptyTags, 'single': 'Tag', 'fixed': 0});
 
 export default Tags;

@@ -6,12 +6,14 @@ import Tags, {ITag} from './Tags.tsx';
 import Description, {IDescription, emptyDescription} from './Description.tsx';
 //@ts-ignore
 import Answeres, {IAnswere} from './answers.tsx';
-
+//@ts-ignore
+import Solutions, {ISolution} from './solutions.tsx';
 
 
 const Form: React.FC = () => {
-  const [tagslist, setTags] = useState<Array<ITag>>([]);
-  const [answerslist, setAnsweres] = useState<Array<IAnswere>>([]);
+  const [tagsList, setTags] = useState<Array<ITag>>([]);
+  const [answersList, setAnsweres] = useState<Array<IAnswere>>([]);
+  const [solutionslist, setSolutions] = useState<Array<ISolution>>([]);
   const [problemDescription, setPD] = useState<IDescription>(emptyDescription);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,11 +22,12 @@ const Form: React.FC = () => {
     // Gather form data
     const formData = {
       'problemDescription': problemDescription,
-      'tags': tagslist,
-      'answeres': answerslist
+      'tags': tagsList,
+      'solutions': solutionslist,
+      'answeres': answersList
     };
 
-    const blob = new Blob([JSON.stringify(formData)]);
+    const blob = new Blob([JSON.stringify(formData, null, 2)], { type: 'application/json' });
     // Save the file using FileSaver.js
     saveAs(blob, 'form-data.json');
   };
@@ -34,8 +37,9 @@ const Form: React.FC = () => {
       <div><label>Problem Description</label>
         <Description items = {problemDescription} setItems = {setPD}/>
         </div>
-      <Tags items = {tagslist} setItems = {setTags}/>
-      <Answeres items = {answerslist} setItems = {setAnsweres} />
+      <Tags items = {tagsList} setItems = {setTags}/>
+      <Answeres items = {answersList} setItems = {setAnsweres} />
+      <Solutions items = {solutionslist} setItems = {setSolutions} />
       <div><button type="submit">Submit</button></div>
     </form>
   );

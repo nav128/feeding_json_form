@@ -1,6 +1,6 @@
 import React from "react";
 
-const GenericList = ({initialValues, single}) => {
+const GenericList = ({initialValues, single, fixed}) => {
     const  func: React.FC<typeof initialValues> = ({items, setItems}) => {
 
         const handleAddItem = () => {
@@ -18,12 +18,22 @@ const GenericList = ({initialValues, single}) => {
           newItems[index][field] = value;
           setItems(newItems);
         };
-        
+
+        const fixSize = () => {
+            const list: typeof initialValues[] = [];
+            for (let i = (items.length -1); i < (fixed-1); i++) {
+            list.push(initialValues());
+          };
+          setItems(list);
+        };
+
+        items.length < fixed && fixSize();
+
         return (
-          <div> 
+          <div><label>{single}s</label> 
             {items.map((item: string, index: number) => (
               <div key={`${single} - ${index}`}>
-              <div><label htmlFor={`${single} ${index}`}>{single} {index}:</label>
+              <div><label htmlFor={`${single} ${index}`}>{single} {index+1}:</label>
                 {Object.keys(initialValues()).map(keyname => (
                   <input 
                     type="text"
@@ -32,7 +42,7 @@ const GenericList = ({initialValues, single}) => {
                     onChange={(e) => handleInputChange(index, keyname, e.target.value)}
                   />
                 ))}
-                {items.length > 1 && (
+                {fixed == 0 && items.length > 1 && (
                   <button type="button" onClick={() => handleRemoveItem(index)}>
                     Remove
                   </button>
@@ -40,9 +50,11 @@ const GenericList = ({initialValues, single}) => {
                 </div>
               </div>
             ))}
-            <button type="button" onClick={() => handleAddItem()}>
+            <div>
+            {fixed == 0 && <button type="button" onClick={() => handleAddItem()}>
               Add {single}
-            </button>
+            </button>}
+            </div>
           </div>
         );
       };
