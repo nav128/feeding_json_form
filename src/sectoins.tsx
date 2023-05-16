@@ -33,12 +33,8 @@ export const emptySection = () => {
   }
 };
 
-interface SectionProps {
-  item: ISection;
-  setItem: React.Dispatch<React.SetStateAction<ISection>>;
-};
 
-const  Section: React.FC<SectionProps> = ({item, setItem}) => {
+const  Section = ({item, setItem}) => {
     const [id, setId] = useState('');
     const [score, setScore] = useState('');
     const [sectionType, setSectionType] = useState('');
@@ -105,4 +101,57 @@ const  Section: React.FC<SectionProps> = ({item, setItem}) => {
     </div>
 };
 
-export default Section;
+interface SectionsProps {
+    items: ISection[];
+    setItems: React.Dispatch<React.SetStateAction<ISection[]>>;
+  };
+
+const Sections: React.FC<SectionsProps> = ({items, setItems}) =>{
+    const [section0, setSection0] = useState<ISection>(emptySection)
+    const [section1, setSection1] = useState<ISection>(emptySection)
+    const [section2, setSection2] = useState<ISection>(emptySection)
+    const [section3, setSection3] = useState<ISection>(emptySection)
+
+    const sectionsList = [section0, section1, section2, section3]
+
+    const handleSave = () => {
+        setItems(sectionsList)
+    };
+
+    const formParts = [
+        { title: 'Section 1', component: <Section item={section0} setItem={setSection0}/>},
+        { title: 'Section 2', component: <Section item={section1} setItem={setSection1}/>},
+        { title: 'Section 3', component: <Section item={section2} setItem={setSection2}/>},
+        { title: 'Section 4', component: <Section item={section3} setItem={setSection3}/>},
+      ];
+
+      const [currentPart, setCurrentPart] = useState(0);
+
+      const handleNext = () => {
+        setCurrentPart((prevPart) => prevPart + 1);
+      };
+    
+      const handlePrevious = () => {
+        setCurrentPart((prevPart) => prevPart - 1);
+      };
+    return (
+    <div>
+        <h2>{formParts[currentPart].title}</h2>
+        {formParts[currentPart].component}
+        <button onClick={handlePrevious} disabled={currentPart === 0}>
+            Previous
+        </button>
+        <button onClick={handleNext} disabled={currentPart === formParts.length - 1}>
+            Next
+      </button>
+      <div>
+        {currentPart === 3 &&
+            <button type="button" onClick={() => handleSave()}>
+                Save Sections
+            </button>}
+        </div>
+    </div>
+    )
+};
+
+export default Sections;
