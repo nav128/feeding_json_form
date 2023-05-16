@@ -8,7 +8,7 @@ export interface ITag {
   score: string;
 };
 
-export const emptyTags = () => {
+export const emptyTag = () => {
   return {id: '', title: '', score: '',};
 };
 
@@ -17,6 +17,6 @@ interface TagsProps {
   setItems: React.Dispatch<React.SetStateAction<Array<ITag>>>;
 }
 
-const  Tags: React.FC<TagsProps> = GenericList({'initialValues': emptyTags, 'single': 'Tag', 'fixed': 0});
+const  Tags: React.FC<TagsProps> = GenericList(emptyTag, 'Tag', true);
 
 export default Tags;

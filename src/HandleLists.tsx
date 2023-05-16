@@ -1,6 +1,16 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 
-const GenericList = ({initialValues, single, fixed}) => {
+export const fixSize = (
+  items: any[], initialValues: any, setItemFunc: SetStateAction<any>, size: number, ) => {
+  if(items.length >= size) return;
+  const list: typeof initialValues[] = [];
+  for (let i = (items.length -1); i < (size-1); i++) {
+    list.push(initialValues());
+  };
+  setItemFunc(list);
+};
+
+const GenericList = (initialValues: any, single: string, dynamicSize: Boolean) => {
     const  func: React.FC<typeof initialValues> = ({items, setItems}) => {
 
         const handleAddItem = () => {
@@ -19,30 +29,21 @@ const GenericList = ({initialValues, single, fixed}) => {
           setItems(newItems);
         };
 
-        const fixSize = () => {
-            const list: typeof initialValues[] = [];
-            for (let i = (items.length -1); i < (fixed-1); i++) {
-            list.push(initialValues());
-          };
-          setItems(list);
-        };
-
-        items.length < fixed && fixSize();
-
+      
         return (
-          <div><label>{single}s</label> 
+          <div> 
             {items.map((item: string, index: number) => (
               <div key={`${single} - ${index}`}>
               <div><label htmlFor={`${single} ${index}`}>{single} {index+1}:</label>
                 {Object.keys(initialValues()).map(keyname => (
-                  <input 
+                  <input key={keyname}
                     type="text"
                     value={item[keyname]}
                     placeholder={keyname}
                     onChange={(e) => handleInputChange(index, keyname, e.target.value)}
                   />
                 ))}
-                {fixed == 0 && items.length > 1 && (
+                {dynamicSize && items.length > 0 && (
                   <button type="button" onClick={() => handleRemoveItem(index)}>
                     Remove
                   </button>
@@ -51,13 +52,14 @@ const GenericList = ({initialValues, single, fixed}) => {
               </div>
             ))}
             <div>
-            {fixed == 0 && <button type="button" onClick={() => handleAddItem()}>
+            {dynamicSize && <button type="button" onClick={() => handleAddItem()}>
               Add {single}
             </button>}
             </div>
           </div>
         );
       };
+
     return func
 };
 

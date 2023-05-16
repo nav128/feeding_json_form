@@ -14,13 +14,11 @@ export const emptyAnswere = () => {
     id: '', answerType: '', content: '', relatedSectionId: ''}
 };
 
-interface AnsweresProps {
+interface AnswersProps {
   items: Array<IAnswere>;
   setItems: React.Dispatch<React.SetStateAction<Array<IAnswere>>>;
 }
 
-const  Answeres: React.FC<AnsweresProps> = GenericList(
-    {'initialValues': emptyAnswere, 'single': 'Answere', 'fixed': 4}
-    );
+const  Answers: React.FC<AnswersProps> = GenericList(emptyAnswere, 'Answere', false);
 
-export default Answeres;
+export default Answers;

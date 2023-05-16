@@ -20,8 +20,6 @@ interface SolutionsProps {
   setItems: React.Dispatch<React.SetStateAction<Array<ISolution>>>;
 }
 
-const  Solutions: React.FC<SolutionsProps> = GenericList(
-    {'initialValues': emptySolution, 'single': 'Solution', 'fixed': 4}
-    );
+const  Solutions: React.FC<SolutionsProps> = GenericList(emptySolution, 'Solution', false);
 
 export default Solutions;

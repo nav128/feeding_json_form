@@ -29,7 +29,7 @@ const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
     return (
         <div>
           {Object.keys(emptyDescription()).map(keyname => (
-          <div>
+          <div key={keyname}>
           <input
             type="text"
             value={items[keyname]}
