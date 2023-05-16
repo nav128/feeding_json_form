@@ -7,54 +7,43 @@ import Description, {IDescription, emptyDescription} from "./Description.tsx";
 import Tags, {ITag} from "./Tags.tsx";
 //@ts-ignore
 import Answers, {IAnswere, emptyAnswere} from "./answers.tsx";
-//@ts-ignore
-import Solutions, {ISolution, emptySolution} from "./solutions.tsx";
 
 
-export interface ISection {
+export interface IFollowUpSection {
     id: string,
-    score: string,
     sectionDescription: IDescription,
     sectionType: string,
-    sectionTags: Array<ITag>,
     answersList: Array<IAnswere>,
-    solutions: Array<ISolution>
+    sectionTags: Array<ITag>,
   };
 
-export const emptySection = () => {
+
+export const emptyFolowUpSection = () => {
   return {
     id: '',
-    score: '',
     sectionDescription: emptyDescription(),
     sectionType: '',
     sectionTags: [],
     answersList: [],
-    solutions: []
   }
 };
 
 
-const  Section = ({setItem}) => {
+const  FolowUpSection = ({setItem}) => {
     const [id, setId] = useState('');
-    const [score, setScore] = useState('');
     const [sectionType, setSectionType] = useState('');
     const [tagsList, setTags] = useState<Array<ITag>>([]);
     const [answersList, setAnswers] = useState<Array<IAnswere>>([]);
-    const [solutionslist, setSolutions] = useState<Array<ISolution>>([]);
     const [problemDescription, setPD] = useState<IDescription>(emptyDescription);
-
     fixSize(answersList, emptyAnswere, setAnswers, 4)
-    fixSize(solutionslist, emptySolution, setSolutions, 2)
 
     const handleSave = () => {
         setItem({
             id: id,
-            score: score,
             sectionDescription: problemDescription,
             sectionType: sectionType,
             sectionTags: tagsList,
             answersList: answersList,
-            solutions: solutionslist
           })
     };
     return <div>
@@ -64,14 +53,6 @@ const  Section = ({setItem}) => {
             value={id}
             placeholder={'id'}
             onChange={(e) => setId(e.target.value)}
-        />
-        </div>
-        <div>
-        <input 
-            type="text"
-            value={score}
-            placeholder={'score'}
-            onChange={(e) => setScore(e.target.value)}
         />
         </div>
         <div><label>Section Description</label>
@@ -91,9 +72,6 @@ const  Section = ({setItem}) => {
         <div><label>Answers List</label>
             <Answers items = {answersList} setItems = {setAnswers} />
         </div>
-        <div><label>Solutions</label>
-            <Solutions items = {solutionslist} setItems = {setSolutions} />
-        </div>
         <div>
             <button type="button" onClick={() => handleSave()}>
               Save
@@ -102,15 +80,15 @@ const  Section = ({setItem}) => {
     </div>
 };
 
-interface SectionsProps {
-    setItems: React.Dispatch<React.SetStateAction<ISection[]>>;
+interface FolowUpSectionsProps {
+    setItems: React.Dispatch<React.SetStateAction<IFollowUpSection[]>>;
   };
 
-const Sections: React.FC<SectionsProps> = ({setItems}) =>{
-    const [section0, setSection0] = useState<ISection>(emptySection)
-    const [section1, setSection1] = useState<ISection>(emptySection)
-    const [section2, setSection2] = useState<ISection>(emptySection)
-    const [section3, setSection3] = useState<ISection>(emptySection)
+const FolowUpSections: React.FC<FolowUpSectionsProps> = ({setItems}) =>{
+    const [section0, setSection0] = useState<IFollowUpSection>(emptyFolowUpSection)
+    const [section1, setSection1] = useState<IFollowUpSection>(emptyFolowUpSection)
+    const [section2, setSection2] = useState<IFollowUpSection>(emptyFolowUpSection)
+    const [section3, setSection3] = useState<IFollowUpSection>(emptyFolowUpSection)
 
     const sectionsList = [section0, section1, section2, section3]
 
@@ -119,10 +97,10 @@ const Sections: React.FC<SectionsProps> = ({setItems}) =>{
     };
 
     const formParts = [
-        { title: 'Section 1', component: <Section setItem={setSection0}/>},
-        { title: 'Section 2', component: <Section setItem={setSection1}/>},
-        { title: 'Section 3', component: <Section setItem={setSection2}/>},
-        { title: 'Section 4', component: <Section setItem={setSection3}/>},
+        { title: 'FolowUpSection 1', component: <FolowUpSection setItem={setSection0}/>},
+        { title: 'FolowUpSection 2', component: <FolowUpSection setItem={setSection1}/>},
+        { title: 'FolowUpSection 3', component: <FolowUpSection setItem={setSection2}/>},
+        { title: 'FolowUpSection 4', component: <FolowUpSection setItem={setSection3}/>},
       ];
 
       const [currentPart, setCurrentPart] = useState(0);
@@ -147,11 +125,11 @@ const Sections: React.FC<SectionsProps> = ({setItems}) =>{
       <div>
         {currentPart === (formParts.length - 1) &&
             <button type="button" onClick={() => handleSave()}>
-                Save Sections
+                Save FolowUp Sections
             </button>}
         </div>
     </div>
     )
 };
 
-export default Sections;
+export default FolowUpSections;
