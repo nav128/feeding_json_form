@@ -10,26 +10,26 @@ export const fixSize = (
   setItemFunc(list);
 };
 
+const handleAddItem = (items:any[], setItems: SetStateAction<any>, initialValues: any) => {
+  setItems([...items, initialValues()])
+};
+
+const handleRemoveItem = (index: number, items:any[], setItems: SetStateAction<any>) => {
+  const newItems = [...items];
+  newItems.splice(index, 1);
+  setItems(newItems);
+};
+
+const handleInputChange = (
+  index: number, field: string, value: string, items:any[], setItems: SetStateAction<any>) => {
+  const newItems = [...items];
+  newItems[index][field] = value;
+  setItems(newItems);
+};
+
 const GenericList = (initialValues: any, single: string, dynamicSize: Boolean) => {
     const  func: React.FC<typeof initialValues> = ({items, setItems}) => {
 
-        const handleAddItem = () => {
-          setItems([...items, initialValues()])
-        };
-      
-        const handleRemoveItem = (index: number) => {
-          const newItems = [...items];
-          newItems.splice(index, 1);
-          setItems(newItems);
-        };
-
-        const handleInputChange = (index: number, field: string, value: string) => {
-          const newItems = [...items];
-          newItems[index][field] = value;
-          setItems(newItems);
-        };
-
-      
         return (
           <div> 
             {items.map((item: string, index: number) => (
@@ -40,11 +40,11 @@ const GenericList = (initialValues: any, single: string, dynamicSize: Boolean) =
                     type="text"
                     value={item[keyname]}
                     placeholder={keyname}
-                    onChange={(e) => handleInputChange(index, keyname, e.target.value)}
+                    onChange={(e) => handleInputChange(index, keyname, e.target.value, items, setItems)}
                   />
                 ))}
                 {dynamicSize && items.length > 0 && (
-                  <button type="button" onClick={() => handleRemoveItem(index)}>
+                  <button type="button" onClick={() => handleRemoveItem(index,  items, setItems)}>
                     Remove
                   </button>
                 )}
@@ -52,9 +52,11 @@ const GenericList = (initialValues: any, single: string, dynamicSize: Boolean) =
               </div>
             ))}
             <div>
-            {dynamicSize && <button type="button" onClick={() => handleAddItem()}>
-              Add {single}
-            </button>}
+            {dynamicSize && 
+              <button type="button" onClick={() => handleAddItem(items, setItems, initialValues)}>
+                Add {single}
+              </button>
+              }
             </div>
           </div>
         );
