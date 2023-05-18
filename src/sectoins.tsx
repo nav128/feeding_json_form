@@ -1,30 +1,21 @@
 import React, { useState } from 'react';
 //@ts-ignore
-import {fixSize} from './HandleLists.tsx'
+import Description, {emptyDescription} from "./Description.tsx";
 //@ts-ignore
-import Description, {IDescription, emptyDescription} from "./Description.tsx";
-//@ts-ignore
-import Tags, {ITag} from "./Tags.tsx";
+import Tags from "./Tags.tsx";
 //@ts-ignore
 import Answers, {IAnswere, emptyAnswere} from "./answers.tsx";
 //@ts-ignore
-import Solutions, {ISolution, emptySolution} from "./solutions.tsx";
+import Solutions, {emptySolution} from "./solutions.tsx";
+//@ts-ignore
+import {TextInput, NumberInput, fixSize} from './utils.tsx'
+import { ISection, ISolution, ITag, IContent} from './types';
 
 
-export interface ISection {
-    id: string,
-    score: string,
-    sectionDescription: IDescription,
-    sectionType: string,
-    sectionTags: Array<ITag>,
-    answersList: Array<IAnswere>,
-    solutions: Array<ISolution>
-  };
-
-export const emptySection = () => {
+export const emptySection = (): ISection => {
   return {
     id: '',
-    score: '',
+    score: 0,
     sectionDescription: emptyDescription(),
     sectionType: '',
     sectionTags: [],
@@ -33,15 +24,17 @@ export const emptySection = () => {
   }
 };
 
-
-const  Section = ({setItem}) => {
+interface SectionProps {
+    setItem: React.Dispatch<React.SetStateAction<ISection>>
+}
+const  Section: React.FC<SectionProps> = ({setItem}) => {
     const [id, setId] = useState('');
-    const [score, setScore] = useState('');
+    const [score, setScore] = useState(0);
     const [sectionType, setSectionType] = useState('');
-    const [tagsList, setTags] = useState<Array<ITag>>([]);
-    const [answersList, setAnswers] = useState<Array<IAnswere>>([]);
-    const [solutionslist, setSolutions] = useState<Array<ISolution>>([]);
-    const [problemDescription, setPD] = useState<IDescription>(emptyDescription);
+    const [tagsList, setTags] = useState<ITag[]>([]);
+    const [answersList, setAnswers] = useState<IAnswere[]>([]);
+    const [solutionslist, setSolutions] = useState<ISolution[]>([]);
+    const [problemDescription, setPD] = useState<IContent>(emptyDescription);
 
     fixSize(answersList, emptyAnswere, setAnswers, 4)
     fixSize(solutionslist, emptySolution, setSolutions, 2)
@@ -59,40 +52,25 @@ const  Section = ({setItem}) => {
     };
     return <div>
         <div>
-        <input 
-            type="text"
-            value={id}
-            placeholder={'id'}
-            onChange={(e) => setId(e.target.value)}
-        />
+            <TextInput item={id} itemNmae='id' setItem={setId}/>
         </div>
         <div>
-        <input 
-            type="text"
-            value={score}
-            placeholder={'score'}
-            onChange={(e) => setScore(e.target.value)}
-        />
+        {<NumberInput item={score} itemNmae='score' setItem={setScore}/>}
         </div>
         <div><label>Section Description</label>
             <Description items = {problemDescription} setItems = {setPD}/>
         </div>
         <div>
-        <input 
-            type="text"
-            value={sectionType}
-            placeholder={'sectionType'}
-            onChange={(e) => setSectionType(e.target.value)}
-        />
+        <TextInput item={sectionType} itemNmae='sectionType' setItem={setSectionType}/>
         </div>
         <div><label>Section Tags</label>
-            <Tags items = {tagsList} setItems = {setTags}/>
+            <Tags items = {tagsList} setItems = {setTags} dynamicSize={true}/>
         </div>
         <div><label>Answers List</label>
-            <Answers items = {answersList} setItems = {setAnswers} />
+            <Answers items = {answersList} setItems = {setAnswers} dynamicSize={false}/>
         </div>
         <div><label>Solutions</label>
-            <Solutions items = {solutionslist} setItems = {setSolutions} />
+            <Solutions items = {solutionslist} setItems = {setSolutions} dynamicSize={false}/>
         </div>
         <div>
             <button type="button" onClick={() => handleSave()}>

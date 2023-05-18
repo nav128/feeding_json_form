@@ -1,22 +1,20 @@
 import React from 'react';
 //@ts-ignore
 import GenericList from './HandleLists.tsx'
+import { ITag } from './types';
 
-export interface ITag {
-  id: string;
-  title: string;
-  score: string;
+
+export const emptyTag = ():ITag => {
+  return {id: '', title: '', score: 0};
 };
 
-export const emptyTag = () => {
-  return {id: '', title: '', score: '',};
-};
 
 interface TagsProps {
-  items: Array<ITag>;
-  setItems: React.Dispatch<React.SetStateAction<Array<ITag>>>;
+  items: ITag[];
+  setItems: React.Dispatch<React.SetStateAction<ITag[]>>;
+  dynamicSize:Boolean
 }
 
-const  Tags: React.FC<TagsProps> = GenericList(emptyTag, 'Tag', true);
+const  Tags: React.FC<TagsProps> = GenericList(emptyTag, 'Tag');
 
 export default Tags;

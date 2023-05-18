@@ -1,11 +1,6 @@
 import React from 'react';
+import { IContent } from './types';
 
-export interface IDescription {
-    "id": string,
-    "title": string,
-    "content": string,
-    "contentType": string
-  };
 
 export const emptyDescription = () => {
   return {
@@ -14,13 +9,13 @@ export const emptyDescription = () => {
 };
 
 interface DescriptionProps {
-  items: IDescription;
-  setItems: React.Dispatch<React.SetStateAction<IDescription>>;
+  items: IContent;
+  setItems: React.Dispatch<React.SetStateAction<IContent>>;
 };
 
 const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
 
-    const handleInputChange = (field: string, value: string) => {
+    const handleInputChange = (field: string, value: string | number) => {
         const newItems = {...items};
         newItems[field] = value;
         setItems(newItems);
@@ -30,12 +25,22 @@ const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
         <div>
           {Object.keys(emptyDescription()).map(keyname => (
           <div key={keyname}>
-          <input
-            type="text"
-            value={items[keyname]}
-            placeholder={keyname}
-            onChange={(e) => handleInputChange(keyname, e.target.value)}
-          /></div> ))} 
+            {typeof items[keyname] === 'string'?
+              <input
+                key={keyname}
+                type='text'
+                value={items[keyname]}
+                placeholder={keyname}
+                onChange={(e) => handleInputChange(keyname,e.target.value)}
+            />:
+            <input
+                key={keyname}
+                type='number'
+                value={items[keyname] !== 0? items[keyname]: ''}
+                placeholder={keyname}
+                onChange={(e) => handleInputChange(keyname, parseFloat(e.target.value))}
+            />}
+          </div> ))} 
         </div>
     )
 };

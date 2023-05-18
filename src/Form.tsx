@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
 import { saveAs } from 'file-saver';
 //@ts-ignore
-import Tags, {ITag, emptyTag} from './Tags.tsx';
+import Tags from './Tags.tsx';
 //@ts-ignore
-import Sections, { ISection, emptySection } from './sectoins.tsx';
+import Sections from './sectoins.tsx';
 //@ts-ignore
-import {validateAllFull} from './utils.tsx'
+import {TextInput, NumberInput,validateAllFull} from './utils.tsx'
 //@ts-ignore
-import Description, { IDescription, emptyDescription } from './Description.tsx';
+import Description, {emptyDescription } from './Description.tsx';
 //@ts-ignore
-import FolowUpSections, { IFollowUpSection } from './followUpSections.tsx';
+import FolowUpSections  from './followUpSections.tsx';
+//@ts-ignore
+import {ITag, ISection, IProblem, IContent} from './types.tsx';
 
 
 const Form: React.FC = () => {
   const [id, setId] = useState<string>('');
-  const [image, setImage] = useState<string>('NoImage');
-  const [score, setScore] = useState<string>('');
-  const [problemDescription, setDescription] = useState<IDescription>(emptyDescription);
+  const [image, setImage] = useState<string>('');
+  const [score, setScore] = useState<number>(0);
+  const [problemDescription, setDescription] = useState<IContent>(emptyDescription);
   const [problemTags, setTags] = useState<ITag[]>([]);
   const [sections, setSections] = useState<ISection[]>([]);
-  const [followUpSections, setFollwUpSections] = useState<IFollowUpSection[]>([]);
+  const [followUpSections, setFollwUpSections] = useState<ISection[]>([]);
 
-  //Indication whether or not to show that you can submit until all parts are saved
+  //Indication whether or not to show that you cant submit until all parts are saved
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   //prevent submition triggered by navigation and `Enter` key-stroke
@@ -32,29 +34,11 @@ const Form: React.FC = () => {
 
   const formParts  = [
     { title: 'Problem Info', component: <div>
-      <div><input
-        key='id'
-        type="text"
-        value={id}
-        placeholder='id'
-        onChange={(e) => setId(e.target.value)}
-      /></div>
-      <div><input
-        key='image'
-        type="text"
-        value={image}
-        placeholder='image'
-        onChange={(e) => setImage(e.target.value)}
-      /></div>
-      <div><input
-        key='score'
-        type="text"
-        value={score}
-        placeholder='score'
-        onChange={(e) => setScore(e.target.value)}
-      /></div>
+      <div><TextInput item={id} itemNmae='id' setItem={setId}/></div>
+      <div><TextInput item={image} itemNmae='image' setItem={setImage}/></div>
+      <div><NumberInput item={score} itemNmae='score' setItem={setScore}/></div>
       <Description items={problemDescription} setItems={setDescription}/>
-      <Tags items={problemTags} setItems={setTags}/>
+      <Tags items={problemTags} setItems={setTags} dynamicSize={true}/>
     </div>},
     {title: 'Sections', component: <Sections setItems={setSections}/>},
     {title: 'FollowUp Sections', component: <FolowUpSections setItems={setFollwUpSections}/>}
@@ -78,9 +62,9 @@ const Form: React.FC = () => {
     setSubmitButtonClicked(false);
 
     // Gather form data
-    const formData = {
+    const formData: IProblem = {
       'id': id,
-      'image': image,
+      'image': image || 'noimage',
       'score': score,
       'problemDescription': problemDescription,
       'problemTags': problemTags,
@@ -88,14 +72,12 @@ const Form: React.FC = () => {
       'sections': sections
     };
 
-    if (!(validateAllFull(sections))) {setShowErrorMessage(true); return;
-    } else {setShowErrorMessage(false);};
-    console.log('Submit called');
-    
+    // if (!(validateAllFull(sections))) {setShowErrorMessage(true); return;
+    // } else {setShowErrorMessage(false);};    
 
     const blob = new Blob([JSON.stringify(formData, null, 2)], { type: 'application/json' });
     // Save the file using FileSaver.js
-    saveAs(blob, 'form-data.json');
+    saveAs(blob, formData['id'] + '.json');
   };
 
   return (
@@ -103,15 +85,19 @@ const Form: React.FC = () => {
       <div>
       <h2>{formParts[currentPart].title}</h2>
         {formParts[currentPart].component}
-        {currentPart != 0 && <button onClick={handlePrevious}>
-            {'<-'} Go To {formParts[currentPart-1].title}
-        </button>}
-        {currentPart != formParts.length - 1 && <button onClick={handleNext}>
-          Go To {formParts[currentPart+1].title} {'->'}
-      </button>}
+        {currentPart !== 0 && 
+        <button onClick={handlePrevious}> {'<-'} {formParts[currentPart-1].title}
+          </button>}
+        {currentPart !== formParts.length - 1 && 
+        <button onClick={handleNext}> {formParts[currentPart+1].title} {'->'}
+          </button>}
       </div>
-      {showErrorMessage && <div>Missing Some Fields, Forgot to Save?</div>}
-      <div><button type="submit" onClick={handleSubmitClik}>Submit</button></div>
+      {currentPart === formParts.length-1 && showErrorMessage &&
+         <div>Missing Some Fields, Forgot to Save?</div>
+         }
+      {currentPart === formParts.length-1 &&
+        <div><button type="submit" onClick={handleSubmitClik}>Save To File</button></div>
+        }
     </form>
   );
 }

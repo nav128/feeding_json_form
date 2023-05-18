@@ -1,40 +1,37 @@
 import React, { useState } from 'react';
 //@ts-ignore
-import {fixSize} from './HandleLists.tsx'
+import {fixSize} from './utils.tsx'
 //@ts-ignore
-import Description, {IDescription, emptyDescription} from "./Description.tsx";
+import Description, {emptyDescription} from "./Description.tsx";
 //@ts-ignore
-import Tags, {ITag} from "./Tags.tsx";
+import Tags from "./Tags.tsx";
 //@ts-ignore
-import Answers, {IAnswere, emptyAnswere} from "./answers.tsx";
+import Answers, {emptyAnswere} from "./answers.tsx";
+//@ts-ignore
+import {TextInput, NumberInput} from './utils.tsx'
+import { ISection, ITag,  IContent, IAnswer} from './types';
 
-
-export interface IFollowUpSection {
-    id: string,
-    sectionDescription: IDescription,
-    sectionType: string,
-    answersList: Array<IAnswere>,
-    sectionTags: Array<ITag>,
-  };
-
-
-export const emptyFolowUpSection = () => {
+export const emptyFolowUpSection = (): ISection => {
   return {
     id: '',
     sectionDescription: emptyDescription(),
     sectionType: '',
     sectionTags: [],
     answersList: [],
+    score: 0
   }
 };
 
-
-const  FolowUpSection = ({setItem}) => {
+interface IfollowUpSectionProps {
+  setItem: React.Dispatch<React.SetStateAction<ISection>>
+};
+const  FolowUpSection: React.FC<IfollowUpSectionProps> = ({setItem}) => {
     const [id, setId] = useState('');
     const [sectionType, setSectionType] = useState('');
-    const [tagsList, setTags] = useState<Array<ITag>>([]);
-    const [answersList, setAnswers] = useState<Array<IAnswere>>([]);
-    const [problemDescription, setPD] = useState<IDescription>(emptyDescription);
+    const [tagsList, setTags] = useState<ITag[]>([]);
+    const [answersList, setAnswers] = useState<IAnswer[]>([]);
+    const [problemDescription, setPD] = useState<IContent>(emptyDescription);
+    const [score, setScore] = useState(0)
     fixSize(answersList, emptyAnswere, setAnswers, 4)
 
     const handleSave = () => {
@@ -44,33 +41,27 @@ const  FolowUpSection = ({setItem}) => {
             sectionType: sectionType,
             sectionTags: tagsList,
             answersList: answersList,
+            score: score
           })
     };
     return <div>
         <div>
-        <input 
-            type="text"
-            value={id}
-            placeholder={'id'}
-            onChange={(e) => setId(e.target.value)}
-        />
+        <TextInput item={id} itemNmae='id' setItem={setId}/>
         </div>
         <div><label>Section Description</label>
             <Description items = {problemDescription} setItems = {setPD}/>
         </div>
         <div>
-        <input 
-            type="text"
-            value={sectionType}
-            placeholder={'sectionType'}
-            onChange={(e) => setSectionType(e.target.value)}
-        />
+        <TextInput item={sectionType} itemNmae='sectionType' setItem={setSectionType}/>
+        </div>
+        <div>
+          <NumberInput item={score} itemNmae='score' setItem={setScore}/>
         </div>
         <div><label>Section Tags</label>
-            <Tags items = {tagsList} setItems = {setTags}/>
+            <Tags items = {tagsList} setItems = {setTags} dynamicSize={true}/>
         </div>
         <div><label>Answers List</label>
-            <Answers items = {answersList} setItems = {setAnswers} />
+            <Answers items = {answersList} setItems = {setAnswers} dynamicSize={false}/>
         </div>
         <div>
             <button type="button" onClick={() => handleSave()}>
@@ -81,14 +72,14 @@ const  FolowUpSection = ({setItem}) => {
 };
 
 interface FolowUpSectionsProps {
-    setItems: React.Dispatch<React.SetStateAction<IFollowUpSection[]>>;
+    setItems: React.Dispatch<React.SetStateAction<ISection[]>>;
   };
 
 const FolowUpSections: React.FC<FolowUpSectionsProps> = ({setItems}) =>{
-    const [section0, setSection0] = useState<IFollowUpSection>(emptyFolowUpSection)
-    const [section1, setSection1] = useState<IFollowUpSection>(emptyFolowUpSection)
-    const [section2, setSection2] = useState<IFollowUpSection>(emptyFolowUpSection)
-    const [section3, setSection3] = useState<IFollowUpSection>(emptyFolowUpSection)
+    const [section0, setSection0] = useState<ISection>(emptyFolowUpSection)
+    const [section1, setSection1] = useState<ISection>(emptyFolowUpSection)
+    const [section2, setSection2] = useState<ISection>(emptyFolowUpSection)
+    const [section3, setSection3] = useState<ISection>(emptyFolowUpSection)
 
     const sectionsList = [section0, section1, section2, section3]
 

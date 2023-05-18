@@ -1,14 +1,8 @@
 import React from 'react';
 //@ts-ignore
 import GenericList from './HandleLists.tsx'
+import { ISolution } from './types';
 
-export interface ISolution {
-  id: string;
-  answerType: string;
-  title: string
-  content: string;
-  contentType: string
-};
 
 export const emptySolution = () => {
   return {
@@ -16,10 +10,11 @@ export const emptySolution = () => {
 };
 
 interface SolutionsProps {
-  items: Array<ISolution>;
-  setItems: React.Dispatch<React.SetStateAction<Array<ISolution>>>;
+  items: ISolution[];
+  setItems: React.Dispatch<React.SetStateAction<ISolution[]>>;
+  dynamicSize: Boolean
 }
 
-const  Solutions: React.FC<SolutionsProps> = GenericList(emptySolution, 'Solution', false);
+const  Solutions: React.FC<SolutionsProps> = GenericList(emptySolution, 'Solution');
 
 export default Solutions;
