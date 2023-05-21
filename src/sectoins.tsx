@@ -12,16 +12,14 @@ import {TextInput, NumberInput, fixSize} from './utils.tsx'
 import { ISection, ISolution, ITag, IContent} from './types';
 
 
-export const emptySection = (): ISection => {
-  return {
+export const emptySection: ISection = {
     id: '',
     score: 0,
-    sectionDescription: emptyDescription(),
+    sectionDescription: {...emptyDescription},
     sectionType: '',
     sectionTags: [],
     answersList: [],
     solutions: []
-  }
 };
 
 interface SectionProps {

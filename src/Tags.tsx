@@ -4,8 +4,8 @@ import GenericList from './HandleLists.tsx'
 import { ITag } from './types';
 
 
-export const emptyTag = ():ITag => {
-  return {id: '', title: '', score: 0};
+export const emptyTag:ITag = {
+  id: '', title: '', score: 0
 };
 
 

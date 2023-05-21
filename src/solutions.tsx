@@ -4,9 +4,8 @@ import GenericList from './HandleLists.tsx'
 import { ISolution } from './types';
 
 
-export const emptySolution = () => {
-  return {
-    id: '', answerType: '', title: '', content: '', contentType: ''}
+export const emptySolution: ISolution = {
+    id: '', solutionType: '', title: '', content: '', contentType: ''
 };
 
 interface SolutionsProps {

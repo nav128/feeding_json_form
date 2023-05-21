@@ -4,9 +4,8 @@ import GenericList from './HandleLists.tsx'
 import { IAnswer } from './types';
 
 
-export const emptyAnswere = (): IAnswer => {
-  return {
-    id: '', answerType: '', content: '', relatedSectionId: ''}
+export const emptyAnswere: IAnswer = {
+    id: '', answerType: '', content: '', relatedSectionId: ''
 };
 
 interface AnswersProps {

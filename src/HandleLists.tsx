@@ -1,8 +1,12 @@
 import React, { SetStateAction } from "react";
 
 
-const handleAddItem = (items:any[], setItems: SetStateAction<any>, initialValues: any) => {
-  setItems([...items, initialValues()])
+const handleAddItem = (
+  items:any[],
+  setItems: SetStateAction<any>,
+  initialValues: Record<string, any>
+  ) => {
+  setItems([...items, {...initialValues}])
 };
 
 const handleRemoveItem = (index: number, items:any[], setItems: SetStateAction<any>) => {
@@ -24,7 +28,7 @@ interface IfuncProps {
   dynamicSize: Boolean
 }
 
-const GenericList = (initialValues: any, single: string) => {
+const GenericList = (initialValues: Record<string, any>, single: string) => {
     const  func: React.FC<IfuncProps> = ({items, setItems, dynamicSize}) => {
 
       return (
@@ -32,8 +36,8 @@ const GenericList = (initialValues: any, single: string) => {
             {items.map((item: string, index: number) => (
               <div key={`${single} - ${index}`}>
               <div><label htmlFor={`${single} ${index}`}>{single} {index+1}:</label>
-                {Object.keys(initialValues()).map(keyname => (
-                  typeof initialValues()[keyname] === 'string' ?
+                {Object.keys(initialValues).map(keyname => (
+                  typeof initialValues[keyname] === 'string' ?
                   <input 
                     key={keyname}
                     type={ "text"}

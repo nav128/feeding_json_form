@@ -2,10 +2,8 @@ import React from 'react';
 import { IContent } from './types';
 
 
-export const emptyDescription = () => {
-  return {
+export const emptyDescription: IContent = {
     "id": '', "title": '', "content": '', "contentType": ''
-  }
 };
 
 interface DescriptionProps {
@@ -23,7 +21,7 @@ const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
 
     return (
         <div>
-          {Object.keys(emptyDescription()).map(keyname => (
+          {Object.keys(emptyDescription).map(keyname => (
           <div key={keyname}>
             {typeof items[keyname] === 'string'?
               <input
