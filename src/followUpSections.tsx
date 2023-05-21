@@ -11,15 +11,13 @@ import Answers, {emptyAnswere} from "./answers.tsx";
 import {TextInput, NumberInput} from './utils.tsx'
 import { ISection, ITag,  IContent, IAnswer} from './types';
 
-export const emptyFolowUpSection = (): ISection => {
-  return {
+export const emptyFolowUpSection: ISection = {
     id: '',
-    sectionDescription: emptyDescription(),
+    sectionDescription: emptyDescription,
     sectionType: '',
     sectionTags: [],
     answersList: [],
     score: 0
-  }
 };
 
 interface IfollowUpSectionProps {
