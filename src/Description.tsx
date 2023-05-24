@@ -1,5 +1,7 @@
 import React from 'react';
 import { IContent } from './types';
+// @ts-ignore
+import { TextArea, TextInput, handleKeyPress } from './utils.tsx';
 
 
 export const emptyDescription: IContent = {
@@ -12,7 +14,17 @@ interface DescriptionProps {
 };
 
 const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
-
+    const elements = [
+      <TextInput item={items['id']} itemNmae='id' 
+        onChange={(e) => handleInputChange('id', e.target.value)}/>,
+      <TextInput item={items['title']} itemNmae='title' 
+        onChange={(e) => handleInputChange('title', e.target.value)}/>,
+      <textarea key={'content'} value={items['content']} placeholder='content'
+        onChange={(e) => handleInputChange('content', e.target.value)}/>,
+      <TextInput item={items['contentType']} itemNmae='contentType' 
+        onChange={(e) => handleInputChange('contentType', e.target.value)}/>
+    ];
+    
     const handleInputChange = (field: string, value: string | number) => {
         const newItems = {...items};
         newItems[field] = value;
@@ -21,24 +33,8 @@ const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
 
     return (
         <div>
-          {Object.keys(emptyDescription).map(keyname => (
-          <div key={keyname}>
-            {typeof items[keyname] === 'string'?
-              <input
-                key={keyname}
-                type='text'
-                value={items[keyname]}
-                placeholder={keyname}
-                onChange={(e) => handleInputChange(keyname,e.target.value)}
-            />:
-            <input
-                key={keyname}
-                type='number'
-                value={items[keyname] !== 0? items[keyname]: ''}
-                placeholder={keyname}
-                onChange={(e) => handleInputChange(keyname, parseFloat(e.target.value))}
-            />}
-          </div> ))} 
+          {elements.map(element => (
+            <div>{element}</div>))} 
         </div>
     )
 };
