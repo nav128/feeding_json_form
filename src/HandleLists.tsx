@@ -15,13 +15,23 @@ const handleRemoveItem = (index: number, items:any[], setItems: SetStateAction<a
   setItems(newItems);
 };
 
-const handleInputChange = (
+const handleListInputChange = (
   index: number, field: string, value: string | number, items:any[], setItems: SetStateAction<any>) => {
   const newItems = [...items];
   newItems[index][field] = value;
   setItems(newItems);
 };
 
+export const handleListElementChange = (items, setItems, index) => {
+
+  const handleInputChange = (field: string, value: string | number) => {
+    const newItems = {...items};
+    newItems[index][field] = value;
+    setItems(newItems);
+  };
+
+  return (handleInputChange)
+}
 interface IfuncProps {
   items: any[],
   setItems: any
@@ -43,7 +53,7 @@ const GenericList = (initialValues: Record<string, any>, single: string) => {
                     type={ "text"}
                     value={item[keyname]}
                     placeholder={keyname}
-                    onChange={(e) => handleInputChange(index, keyname, e.target.value, items, setItems)}
+                    onChange={(e) => handleListInputChange(index, keyname, e.target.value, items, setItems)}
                   />:
                   <input 
                     key={keyname}
@@ -51,7 +61,7 @@ const GenericList = (initialValues: Record<string, any>, single: string) => {
                     value={item[keyname] !== 0? item[keyname]: ''}
                     step={0.25}
                     placeholder={keyname}
-                    onChange={(e) => handleInputChange(index, keyname, parseFloat(e.target.value), items, setItems)}
+                    onChange={(e) => handleListInputChange(index, keyname, parseFloat(e.target.value), items, setItems)}
                   />
                 ))}
                 {dynamicSize && items.length > 0 && (

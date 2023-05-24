@@ -19,7 +19,7 @@ const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
         onChange={(e) => handleInputChange('id', e.target.value)}/>,
       <TextInput item={items['title']} itemNmae='title' 
         onChange={(e) => handleInputChange('title', e.target.value)}/>,
-      <textarea key={'content'} value={items['content']} placeholder='content'
+      <TextArea item={items['content']} itemNmae={'content'} 
         onChange={(e) => handleInputChange('content', e.target.value)}/>,
       <TextInput item={items['contentType']} itemNmae='contentType' 
         onChange={(e) => handleInputChange('contentType', e.target.value)}/>
