@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, {SetStateAction } from 'react';
 import './utils.css';
 
 export const validateAllFull = (x: string| number|string[]| Record<string, any>) => {
@@ -78,20 +78,52 @@ export const NumberInput: React.FC<inputNumberTemplateProps> = (
     onChange={onChange? onChange: (e) => setItem(parseFloat(e.target.value))}
   />)};
 
+export const deepCopy = (obj: any): any => {
+  if( typeof obj !== 'object' || obj === null){
+    return obj;
+  }
+
+   const copy: any = Array.isArray(obj) ? []: {};
+
+   Object.keys(obj).forEach((key) => {
+    copy[key] = deepCopy(obj[key])
+   });
+   
+   return copy;
+}
 export const fixSize = (
   items: any[],
   initialValues: Record<string, any>,
   setItemFunc: SetStateAction<any>,
   size: number,
   ) => {
-  console.log('before', items)
+
   if(items.length >= size) return;
-  console.log('before', items)
   const list: any[] = [];
   for (let i = (items.length -1); i < (size-1); i++) {
-    list.push({...initialValues});
+    list.push(deepCopy(initialValues));
   };
   setItemFunc(list);
-  console.log('after', items)
 };
 
+export const mimicSetitemRecordElement = (
+  record: Record<string, any>, setRecord: SetStateAction<any>, field:string) => {
+    const setItem = (value: any) => {
+      const newRecord = {...record}
+      newRecord[field] = value
+      setRecord(newRecord)
+    };
+
+  return setItem
+};
+
+export const mimicSetitemListElement = (
+  list: any[], setRecord: SetStateAction<any>, index: number) => {
+    const setItem = (value: any) => {
+      const newRecord = [...list]
+      newRecord[index] = value
+      setRecord(newRecord)
+    };
+
+  return setItem
+};

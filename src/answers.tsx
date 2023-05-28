@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 //@ts-ignore
-import GenericList, { handleListElementChange } from './HandleLists.tsx'
+import { handleListElementChange } from './HandleLists.tsx'
 //@ts-ignore
 import { IAnswer, answerType } from './types.tsx';
 //@ts-ignore
@@ -46,7 +46,8 @@ const  Answers: React.FC<AnswersProps> = ({items, setItems}) => {
 
   return(<div>
     {items.map((answer, index) => (
-      <div><label>Answere {index + 1}</label>
+      <div>
+        {/* <label>Answere {index + 1}</label> */}
       <Answer item={answer} handleChange={handleListElementChange(items, setItems, index)} /></div>
     ))}
   </div>)

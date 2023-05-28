@@ -3,14 +3,14 @@ import { saveAs } from 'file-saver';
 //@ts-ignore
 import Tags from './Tags.tsx';
 //@ts-ignore
-import Sections from './sectoins.tsx';
+import Sections, { emptySection } from './sectoins.tsx';
 //@ts-ignore
-import {TextInput, NumberInput,validateAllFull} from './utils.tsx'
+import {TextInput, NumberInput,validateAllFull, fixSize} from './utils.tsx'
 import './utils.css';
 //@ts-ignore
 import Description, {emptyDescription } from './Description.tsx';
 //@ts-ignore
-import FolowUpSections  from './followUpSections.tsx';
+import FolowUpSections, { emptyFolowUpSection }  from './followUpSections.tsx';
 //@ts-ignore
 import {ITag, ISection, IProblem, IContent} from './types.tsx';
 
@@ -23,7 +23,8 @@ const Form: React.FC = () => {
   const [problemTags, setTags] = useState<ITag[]>([]);
   const [sections, setSections] = useState<ISection[]>([]);
   const [followUpSections, setFollwUpSections] = useState<ISection[]>([]);
-
+  fixSize(sections, emptySection, setSections, 4)
+  fixSize(followUpSections, emptyFolowUpSection, setFollwUpSections, 4)
   //Indication whether or not to show that you cant submit until all parts are saved
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
@@ -43,8 +44,9 @@ const Form: React.FC = () => {
         </div>
       <Tags items={problemTags} setItems={setTags}/>
     </div>},
-    {title: 'Sections', component: <Sections setItems={setSections}/>},
-    {title: 'FollowUp Sections', component: <FolowUpSections setItems={setFollwUpSections}/>}
+    {title: 'Sections', component: <Sections items={sections} setItems={setSections}/>},
+    {title: 'FollowUp Sections', component: <
+      FolowUpSections items={followUpSections} setItems={setFollwUpSections}/>}
   ]
 
   const [currentPart, setCurrentPart] = useState(0);

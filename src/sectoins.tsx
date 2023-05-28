@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, {useState } from 'react';
 //@ts-ignore
 import Description, {emptyDescription} from "./Description.tsx";
 //@ts-ignore
 import Tags from "./Tags.tsx";
 //@ts-ignore
-import Answers, {IAnswere, emptyAnswere} from "./answers.tsx";
+import Answers, {emptyAnswere} from "./answers.tsx";
 //@ts-ignore
 import Solutions, {emptySolution} from "./solutions.tsx";
 //@ts-ignore
-import {TextInput, NumberInput, fixSize} from './utils.tsx'
+import {TextInput, NumberInput, mimicSetitemRecordElement, mimicSetitemListElement} from './utils.tsx'
 //@ts-ignore
-import { ISection, ISolution, ITag, IContent, solutionType} from './types.tsx';
+import { ISection} from './types.tsx';
 
 
 export const emptySection: ISection = {
@@ -19,87 +19,70 @@ export const emptySection: ISection = {
     sectionDescription: {...emptyDescription},
     sectionType: '',
     sectionTags: [],
-    answersList: [],
-    solutions: []
+    answersList: [{...emptyAnswere}, {...emptyAnswere}, {...emptyAnswere}, {...emptyAnswere}],
+    solutions: [{...emptySolution}, {...emptySolution}]
 };
 
 interface SectionProps {
-    setItem: React.Dispatch<React.SetStateAction<ISection>>
+    item: ISection
+    setItem: (value: any) => void
 }
-const  Section: React.FC<SectionProps> = ({setItem}) => {
-    const [id, setId] = useState('');
-    const [score, setScore] = useState(0);
-    const [sectionType, setSectionType] = useState('');
-    const [tagsList, setTags] = useState<ITag[]>([]);
-    const [answersList, setAnswers] = useState<IAnswere[]>([]);
-    const [solutionslist, setSolutions] = useState<ISolution[]>([]);
-    const [problemDescription, setPD] = useState<IContent>(emptyDescription);
+const  Section: React.FC<SectionProps> = ({item, setItem}) => {
 
-    fixSize(answersList, emptyAnswere, setAnswers, 4)
-    fixSize(solutionslist, emptySolution, setSolutions, 2)
-
-    const handleSave = () => {
-        setItem({
-            id: id,
-            score: score,
-            sectionDescription: problemDescription,
-            sectionType: sectionType,
-            sectionTags: tagsList,
-            answersList: answersList,
-            solutions: solutionslist
-          })
-    };
+    const setId = mimicSetitemRecordElement(item, setItem, 'id');
+    const setScore = mimicSetitemRecordElement(item, setItem, 'score');
+    const setSectionType = mimicSetitemRecordElement(item, setItem, 'sectionType');
+    const setTags = mimicSetitemRecordElement(item, setItem, 'sectionTags');
+    const setAnswers = mimicSetitemRecordElement(item, setItem, 'answersList');
+    const setSolutions = mimicSetitemRecordElement(item, setItem, 'solutions');
+    const setSD = mimicSetitemRecordElement(item, setItem, 'sectionDescription');
+   
     return <div>
         <div>
-            <TextInput item={id} itemNmae='id' setItem={setId}/>
+            <TextInput item={item['id']} itemNmae='id' setItem={setId}/>
         </div>
         <div>
-        {<NumberInput item={score} itemNmae='score' setItem={setScore}/>}
+        {<NumberInput item={item['score']} itemNmae='score' setItem={setScore}/>}
         </div>
         <div><label>Section Description</label>
-            <Description items = {problemDescription} setItems = {setPD}/>
+            <Description items={item['sectionDescription']} setItems = {setSD}/>
         </div>
         <div>
-        <TextInput item={sectionType} itemNmae='sectionType' setItem={setSectionType}/>
+        <TextInput item={item['sectionType']} itemNmae='sectionType' setItem={setSectionType}/>
         </div>
         <div><label>Section Tags</label>
-            <Tags items = {tagsList} setItems = {setTags}/>
+            <Tags items = {item['sectionTags']} setItems = {setTags}/>
+     
         </div>
         <div><label>Answers List</label>
-            <Answers items = {answersList} setItems = {setAnswers}/>
+            <Answers items = {item['answersList']} setItems = {setAnswers}/>
         </div>
         <div><label>Solutions</label>
-            <Solutions items = {solutionslist} setItems = {setSolutions}/>
-        </div>
-        <div>
-            <button type="button" onClick={() => handleSave()}>
-              Save
-            </button>
+            {/* @ts-ignore */}// since item['solutions'] can be undefined in 'ISection'                            
+            <Solutions items={item['solutions']} setItems = {setSolutions}/>
         </div>
     </div>
 };
 
 interface SectionsProps {
+    items: ISection[]
     setItems: React.Dispatch<React.SetStateAction<ISection[]>>;
   };
 
-const Sections: React.FC<SectionsProps> = ({setItems}) =>{
-    const [section0, setSection0] = useState<ISection>(emptySection)
-    const [section1, setSection1] = useState<ISection>(emptySection)
-    const [section2, setSection2] = useState<ISection>(emptySection)
-    const [section3, setSection3] = useState<ISection>(emptySection)
+const Sections: React.FC<SectionsProps> = ({items, setItems}) =>{
 
-    const sectionsList = [section0, section1, section2, section3]
-
-    const handleSave = () => {
-        setItems(sectionsList)
-    };
-
+    if(items.length !== 4){
+        throw new Error('Sections list should have exactly 4 elements, Got ' + items.length)
+    }
     const formParts = [
-        { title: 'Section 1', component: <Section setItem={setSection0}/>},
-        { title: 'Section 2', component: <Section setItem={setSection1}/>},
-        { title: 'Section 3', component: <Section setItem={setSection2}/>},
-        { title: 'Section 4', component: <Section setItem={setSection3}/>},
+        { title: 'Section 1', component: <
+            Section item={items[0]} setItem={mimicSetitemListElement(items, setItems, 0)}/>},
+        { title: 'Section 2', component: <
+            Section item={items[1]} setItem={ mimicSetitemListElement(items, setItems, 1)}/>},
+        { title: 'Section 3', component: <
+            Section item={items[2]} setItem={ mimicSetitemListElement(items, setItems, 2)}/>},
+        { title: 'Section 4', component: <
+            Section item={items[3]} setItem={ mimicSetitemListElement(items, setItems, 3)}/>},
       ];
 
       const [currentPart, setCurrentPart] = useState(0);
@@ -121,16 +104,6 @@ const Sections: React.FC<SectionsProps> = ({setItems}) =>{
         <button onClick={handleNext} disabled={currentPart === formParts.length - 1}>
             Next
       </button>
-      <div>
-        {currentPart === (formParts.length - 1) && 
-        (sectionsList.reduce((acc, section) => acc + section.score, 0) === 100 ?
-            <button type="button" onClick={() => handleSave()}>
-                Save Sections
-            </button>:
-            <p>Significans (score) of all sections should add up to 100%,
-                <br />Fix this issue before you can save `Sections`</p>
-            )}
-      </div>
     </div>
     )
 };

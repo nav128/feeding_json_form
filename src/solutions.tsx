@@ -50,7 +50,7 @@ interface SolutionsProps {
 
 const  Solutions: React.FC<SolutionsProps> = ({items, setItems}) => {
   if (items.length !== 2) {
-    throw new Error('items prop must have exactly 2 elements');
+    throw new Error('solutions list must have exactly 2 lements. got ' + items.length);
   };
   
   const setSolutionTypes = () => {
