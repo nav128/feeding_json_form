@@ -23,7 +23,7 @@ export const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => 
 };
 
 interface inputTemplateProps {
-  item: string, itemNmae: string, setItem?: any, onChange?: any
+  item: string| undefined, itemNmae: string, setItem?: any, onChange?: any
 };
 
 export const TextInput: React.FC<inputTemplateProps> = ({item, itemNmae, setItem, onChange}) => {
@@ -45,7 +45,23 @@ export const TextArea: React.FC<inputTemplateProps> = ({item, itemNmae, setItem,
     placeholder={itemNmae}
     onChange={onChange? onChange: (e) => setItem(e.target.value)}
     />);};
-    
+
+
+interface inputEnumTemplateProps {
+  item: string| undefined, itemNmae: string, setItem?: any, onChange?: any, id: string
+};
+export const TextEnumInput: React.FC<inputEnumTemplateProps> = ({item, itemNmae, setItem, onChange, id}) => {
+  return( <input
+    key={itemNmae}
+    list={id}
+    type='text'
+    value={item}
+    placeholder={itemNmae}
+    onChange={onChange? onChange: (e) => setItem(e.target.value)}
+    onKeyDown={handleKeyPress}
+    />);};
+
+
 interface inputNumberTemplateProps {
   item: number, itemNmae: string, setItem?: any, onChange?: any
 };
@@ -68,11 +84,14 @@ export const fixSize = (
   setItemFunc: SetStateAction<any>,
   size: number,
   ) => {
+  console.log('before', items)
   if(items.length >= size) return;
+  console.log('before', items)
   const list: any[] = [];
   for (let i = (items.length -1); i < (size-1); i++) {
     list.push({...initialValues});
   };
   setItemFunc(list);
+  console.log('after', items)
 };
 

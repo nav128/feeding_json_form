@@ -56,10 +56,10 @@ const  FolowUpSection: React.FC<IfollowUpSectionProps> = ({setItem}) => {
           <NumberInput item={score} itemNmae='score' setItem={setScore}/>
         </div>
         <div><label>Section Tags</label>
-            <Tags items = {tagsList} setItems = {setTags} dynamicSize={true}/>
+            <Tags items = {tagsList} setItems = {setTags}/>
         </div>
         <div><label>Answers List</label>
-            <Answers items = {answersList} setItems = {setAnswers} dynamicSize={false}/>
+            <Answers items = {answersList} setItems = {setAnswers}/>
         </div>
         <div>
             <button type="button" onClick={() => handleSave()}>

@@ -6,6 +6,7 @@ import Tags from './Tags.tsx';
 import Sections from './sectoins.tsx';
 //@ts-ignore
 import {TextInput, NumberInput,validateAllFull} from './utils.tsx'
+import './utils.css';
 //@ts-ignore
 import Description, {emptyDescription } from './Description.tsx';
 //@ts-ignore
@@ -33,12 +34,14 @@ const Form: React.FC = () => {
   }
 
   const formParts  = [
-    { title: 'Problem Info', component: <div>
+    { title: 'Problem Info', component: <div onSubmit={() => {return false;}}>
       <div><TextInput item={id} itemNmae='id' setItem={setId}/></div>
       <div><TextInput item={image} itemNmae='image' setItem={setImage}/></div>
       <div><NumberInput item={score} itemNmae='score' setItem={setScore}/></div>
-      <Description items={problemDescription} setItems={setDescription}/>
-      <Tags items={problemTags} setItems={setTags} dynamicSize={true}/>
+      <div><h4>Problem Description</h4>
+        <Description items={problemDescription} setItems={setDescription}/>
+        </div>
+      <Tags items={problemTags} setItems={setTags}/>
     </div>},
     {title: 'Sections', component: <Sections setItems={setSections}/>},
     {title: 'FollowUp Sections', component: <FolowUpSections setItems={setFollwUpSections}/>}
@@ -46,7 +49,8 @@ const Form: React.FC = () => {
 
   const [currentPart, setCurrentPart] = useState(0);
 
-  const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault();
     setCurrentPart((prevPart) => prevPart + 1);
   };
 
@@ -72,12 +76,13 @@ const Form: React.FC = () => {
       'sections': sections
     };
 
-    // if (!(validateAllFull(sections))) {setShowErrorMessage(true); return;
-    // } else {setShowErrorMessage(false);};    
+    if (!(validateAllFull(sections))) {setShowErrorMessage(true); return;
+    } else {setShowErrorMessage(false);};    
 
     const blob = new Blob([JSON.stringify(formData, null, 2)], { type: 'application/json' });
     // Save the file using FileSaver.js
     saveAs(blob, formData['id'] + '.json');
+    return false;
   };
 
   return (

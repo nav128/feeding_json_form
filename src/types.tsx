@@ -2,7 +2,7 @@ export interface IAnswer {
     id: string;
     answerType: string;
     content: string;
-    relatedSectionId: string;
+    relatedSectionId?: string;
   }
   export interface IContent {
     id: string;
@@ -10,6 +10,7 @@ export interface IAnswer {
     contentType: string;
     content: string;
   }
+
   export interface ISection {
     id: string;
     sectionDescription: IContent;
@@ -42,6 +43,28 @@ export interface IAnswer {
   export interface IWiki extends IContent {
     wikiTags?: ITag[];
   }
+
+  export enum contentType {
+    TEXT = 'TEXT'
+  }
+
+  export enum answerType {
+    CORRECT = 'CORRECT',
+    INCORRECT = 'INCORRECT'
+  }
+
+  export enum solutionType {
+    CONCISE = 'CONCISE',
+    FULL = "FULL"
+  }
+
+// 1. should be Enum = contentType, answerType
+  // solutionType should be predetermined
+// 2. all score groupe (sections, each tag group,) should add up to 100
+// should add Add Image button upload localy
+// content field should support reach text
+// in sections-> answers each answer should not have a relatedSectionId 
+//    but if it is in correct he should be able to add a followUpSection
 
 
 

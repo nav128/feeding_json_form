@@ -1,7 +1,8 @@
 import React from 'react';
-import { IContent } from './types';
+//@ts-ignore
+import { IContent, contentType } from './types.tsx';
 // @ts-ignore
-import { TextArea, TextInput, handleKeyPress } from './utils.tsx';
+import { TextArea, TextEnumInput, TextInput, handleKeyPress } from './utils.tsx';
 
 
 export const emptyDescription: IContent = {
@@ -21,8 +22,10 @@ const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
         onChange={(e) => handleInputChange('title', e.target.value)}/>,
       <TextArea item={items['content']} itemNmae={'content'} 
         onChange={(e) => handleInputChange('content', e.target.value)}/>,
-      <TextInput item={items['contentType']} itemNmae='contentType' 
-        onChange={(e) => handleInputChange('contentType', e.target.value)}/>
+      <TextEnumInput item={items['contentType']} itemNmae='contentType' 
+        onChange={(e) => handleInputChange('contentType', e.target.value)} id='content'/>,
+      <datalist id="content">{
+        Object.values(contentType).map((value) => <option value={value}/>)}</datalist>
     ];
     
     const handleInputChange = (field: string, value: string | number) => {

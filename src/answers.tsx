@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 //@ts-ignore
 import GenericList, { handleListElementChange } from './HandleLists.tsx'
-import { IAnswer } from './types';
 //@ts-ignore
-import { TextArea, TextInput } from './utils.tsx';
+import { IAnswer, answerType } from './types.tsx';
+//@ts-ignore
+import { TextArea, TextEnumInput, TextInput } from './utils.tsx';
 
 
 export const emptyAnswere: IAnswer = {
@@ -22,14 +23,16 @@ const Answer :React.FC<answerProps> = ({item, handleChange}) => {
   <div>
     <TextInput item={item['id']} itemNmae={'id'} 
       onChange={(e) => handleChange('id', e.target.value)}/>
-    <TextInput item={item['answerType']} itemNmae={'answerType'} 
-      onChange={(e) => handleChange('answerType', e.target.value)}/>
+    <TextEnumInput item={item['answerType']} itemNmae={'answerType'} 
+      onChange={(e) => handleChange('answerType', e.target.value)} id='answerType'/>
+    <datalist id='answerType'>
+      {Object.values(answerType).map((value) => <option value={value}/>)}</datalist>
     { Object.keys(item).includes('relatedSectionId') &&
       <TextInput item={item['relatedSectionId']} itemNmae={'relatedSectionId'} 
         onChange={(e) => handleChange('relatedSectionId', e.target.value)}/>
     }
-    <div><TextArea item={item['content']} itemNmae={'content'} 
-      onChange={(e) => handleChange('content', e.target.value)}/></div>
+    <TextArea item={item['content']} itemNmae={'content'} 
+      onChange={(e) => handleChange('content', e.target.value)}/>
   </div>
   )
 };
