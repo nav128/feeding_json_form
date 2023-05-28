@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 //@ts-ignore
 import { handleAddItem, handleListElementChange, handleRemoveItem } from './HandleLists.tsx'
 import { ITag } from './types';
@@ -26,7 +26,7 @@ const Tag: React.FC<TagProps> = ({item, handleChange, label, removeMe}) => {
         <TextInput item={item['title']} itemNmae='title' 
           onChange={(e) => handleChange('title', e.target.value)}/>
         <NumberInput item={item['score']} itemNmae='score' 
-          onChange={(e) => handleChange('score', e.target.value)}/>
+          onChange={(e) => handleChange('score', parseFloat(e.target.value))}/>
         <button type="button" onClick={removeMe}>Remove</button>
       </div>
     )
@@ -37,37 +37,32 @@ interface TagsProps {
   setItems: React.Dispatch<React.SetStateAction<ITag[]>>;
 }
 
+const isTagsScoreValid = (tagsList: ITag[]) => {
+  if(tagsList.length === 0){return true}
+  const totalScore: number = tagsList.reduce((acc, tag) => acc + tag.score , 0)
+  return totalScore === 100
+}
+
 const  Tags: React.FC<TagsProps> = ({items, setItems}) => {
-  if(!(typeof items.map === 'function')) {
-    throw new Error(typeof items)
-  }
+
   const elements = [
-    <div>{items.map((item, index) => (
+    <div>{items.map((item: ITag, index: number) => (
       <div>
         <Tag item={item} handleChange={handleListElementChange(items, setItems, index)}
             label={'Tag ' + index} removeMe={() => handleRemoveItem(index,  items, setItems)}/>
         </div>))}
     </div>,
     <div>
-
+      {!isTagsScoreValid(items) &&
+      <p>Significans (score) of all taged subjects should add up to 100%</p>}
       <button type="button" onClick={() => handleAddItem(items, setItems, emptyTag)}>
         Add Tag
       </button>
     </div>
   ];
+
   return (<div>
-    {/* {elements.map(element => (element))} */}
-    <div>{items.map((item: ITag, index: number) => (
-      <div>
-        <Tag item={item} handleChange={handleListElementChange(items, setItems, index)}
-            label={'Tag ' + index} removeMe={() => handleRemoveItem(index,  items, setItems)}/>
-        </div>))}
-    </div>
-    <div>
-      <button type="button" onClick={() => handleAddItem(items, setItems, emptyTag)}>
-        Add Tag
-      </button>
-    </div>
+    {elements.map(element => (element))}
     </div>)
 };
 

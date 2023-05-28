@@ -122,11 +122,15 @@ const Sections: React.FC<SectionsProps> = ({setItems}) =>{
             Next
       </button>
       <div>
-        {currentPart === (formParts.length - 1) &&
+        {currentPart === (formParts.length - 1) && 
+        (sectionsList.reduce((acc, section) => acc + section.score, 0) === 100 ?
             <button type="button" onClick={() => handleSave()}>
                 Save Sections
-            </button>}
-        </div>
+            </button>:
+            <p>Significans (score) of all sections should add up to 100%,
+                <br />Fix this issue before you can save `Sections`</p>
+            )}
+      </div>
     </div>
     )
 };
