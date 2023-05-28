@@ -29,13 +29,12 @@ const Solution: React.FC<SolutionProps> = ({item, handleChange}) => {
           onChange={(e) => handleChange('contentType', e.target.value)}/>
       </div>,
       <TextArea item={item['content']} itemNmae='content' 
-        onChange={(e) => handleChange('content', e.target.value)}/>,
-      ,
+        onChange={(e) => handleChange('content', e.target.value)}/>
     ];
 
     return (
       <div>
-        {elements.map(element => (
+        {elements.map((element) => (
           <div>{element}</div>
         ))}
       </div>

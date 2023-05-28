@@ -1,7 +1,7 @@
 import React, { SetStateAction } from "react";
 
 
-const handleAddItem = (
+export const handleAddItem = (
   items:any[],
   setItems: SetStateAction<any>,
   initialValues: Record<string, any>
@@ -9,7 +9,7 @@ const handleAddItem = (
   setItems([...items, {...initialValues}])
 };
 
-const handleRemoveItem = (index: number, items:any[], setItems: SetStateAction<any>) => {
+export const handleRemoveItem = (index: number, items:any[], setItems: SetStateAction<any>) => {
   const newItems = [...items];
   newItems.splice(index, 1);
   setItems(newItems);
@@ -22,16 +22,17 @@ const handleListInputChange = (
   setItems(newItems);
 };
 
-export const handleListElementChange = (items, setItems, index) => {
+export const handleListElementChange = (items: any[], setItems: any, index: number) => {
 
-  const handleInputChange = (field: string, value: string | number) => {
-    const newItems = {...items};
+  const handleInputChange = (field: string, value: any) => {
+    const newItems = [...items];
     newItems[index][field] = value;
     setItems(newItems);
   };
 
   return (handleInputChange)
-}
+};
+
 interface IfuncProps {
   items: any[],
   setItems: any
