@@ -4,7 +4,7 @@ import { handleListElementChange } from './HandleLists.tsx'
 //@ts-ignore
 import { IAnswer, answerType } from './types.tsx';
 //@ts-ignore
-import { TextArea, TextEnumInput, TextInput } from './utils.tsx';
+import { TextArea, TextEnumInput, TextInput, alignIdListItems } from './utils.tsx';
 
 
 export const emptyAnswere: IAnswer = {
@@ -41,15 +41,18 @@ const Answer :React.FC<answerProps> = ({item, handleChange, linkFollowupSection}
 };
 
 interface AnswersProps {
+  sectionId: string
   items: IAnswer[];
   setItems: React.Dispatch<React.SetStateAction<Array<IAnswer>>>;
   linkToFollowUpSection?: string
 }
 
-const  Answers: React.FC<AnswersProps> = ({items, setItems, linkToFollowUpSection}) => {
+const  Answers: React.FC<AnswersProps> = ({sectionId, items, setItems, linkToFollowUpSection}) => {
   if(items.length !== 4){
     throw new Error('Answers list must have exactly 4 elements, Got ' + items.length)
   }
+
+  alignIdListItems(items, setItems, sectionId + '-answer-')
 
   let enableLinkToFollwUpSection: boolean = false
   if(linkToFollowUpSection 

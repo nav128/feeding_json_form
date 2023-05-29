@@ -16,6 +16,15 @@ export const validateAllFull = (x: string| number|string[]| Record<string, any>)
     return Object.values(x).every((value) => validateAllFull(value));
   };
 
+export const alignIdListItems = (list: Record<string, any>[], setItems: any, prefix: string) => {
+  if(list.some(element => !element['id'].startsWith(prefix))){
+    const newList = deepCopy(list);
+    newList.map((ele, index) => {
+      ele['id'] = prefix + index}
+      );
+    setItems(newList)
+  }
+}  
 export const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
   if (event.key === 'Enter') {
     event.preventDefault();

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 //@ts-ignore
-import {fixSize, mimicSetitemListElement, mimicSetitemRecordElement} from './utils.tsx'
+import {alignIdListItems, deepCopy, mimicSetitemListElement, mimicSetitemRecordElement} from './utils.tsx'
 //@ts-ignore
 import Description, {emptyDescription} from "./Description.tsx";
 //@ts-ignore
@@ -9,7 +9,7 @@ import Tags from "./Tags.tsx";
 import Answers, {emptyAnswere} from "./answers.tsx";
 //@ts-ignore
 import {TextInput, NumberInput} from './utils.tsx'
-import { ISection, ITag,  IContent, IAnswer} from './types';
+import { ISection} from './types';
 
 export const emptyFolowUpSection: ISection = {
     id: '',
@@ -38,7 +38,7 @@ const  FolowUpSection: React.FC<IfollowUpSectionProps> = ({item, setItem}) => {
         <TextInput item={item['id']} itemNmae='id' setItem={setId}/>
         </div>
         <div><label>Section Description</label>
-            <Description items = {item['sectionDescription']} setItems = {setSD}/>
+            <Description fathersId={item['id']} items = {item['sectionDescription']} setItems = {setSD}/>
         </div>
         <div>
         <TextInput item={item['sectionType']} itemNmae='sectionType' setItem={setSectionType}/>
@@ -50,21 +50,24 @@ const  FolowUpSection: React.FC<IfollowUpSectionProps> = ({item, setItem}) => {
             <Tags items = {item['sectionTags']} setItems={setTags}/>
         </div>
         <div><label>Answers List</label>
-            <Answers items = {item['answersList']} setItems={setAnswers}/>
+            <Answers sectionId={item['id']} items = {item['answersList']} setItems={setAnswers}/>
         </div>
     </div>
 };
 
 interface FolowUpSectionsProps {
+    problemId: string
     items: ISection[]
     setItems: React.Dispatch<React.SetStateAction<ISection[]>>;
   };
 
-    const FolowUpSections: React.FC<FolowUpSectionsProps> = ({items, setItems}) =>{
+    const FolowUpSections: React.FC<FolowUpSectionsProps> = ({problemId, items, setItems}) =>{
       if(items.length !== 4){
         throw new Error('FollowUpSections list should have exactly 4 elements, Got ' + items.length)
     }
 
+    alignIdListItems(items, setItems, problemId + '-follow-up-sections-')
+    
     const formParts = [
         { title: 'Section 1', component: <
             FolowUpSection item={items[0]} setItem={mimicSetitemListElement(items, setItems, 0)}/>},

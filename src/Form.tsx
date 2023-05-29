@@ -17,6 +17,7 @@ import {ITag, ISection, IProblem, IContent} from './types.tsx';
 
 const Form: React.FC = () => {
   const [id, setId] = useState<string>('');
+  const [subject, setSubject] = useState<string>('');
   const [image, setImage] = useState<string>('');
   const [score, setScore] = useState<number>(0);
   const [problemDescription, setDescription] = useState<IContent>(emptyDescription);
@@ -36,17 +37,18 @@ const Form: React.FC = () => {
 
   const formParts  = [
     { title: 'Problem Info', component: <div onSubmit={() => {return false;}}>
-      <div><TextInput item={id} itemNmae='id' setItem={setId}/></div>
+      <div><TextInput item={subject} itemNmae='subject' setItem={setSubject}/></div>
+      <div><TextInput item={id} itemNmae='problem number' setItem={setId}/></div>
       <div><TextInput item={image} itemNmae='image' setItem={setImage}/></div>
       <div><NumberInput item={score} itemNmae='score' setItem={setScore}/></div>
       <div><h4>Problem Description</h4>
-        <Description items={problemDescription} setItems={setDescription}/>
+        <Description fathersId={subject+'-problem-'+id} items={problemDescription} setItems={setDescription}/>
         </div>
       <Tags items={problemTags} setItems={setTags}/>
     </div>},
-    {title: 'Sections', component: <Sections items={sections} setItems={setSections}/>},
+    {title: 'Sections', component: <Sections problemId={subject+'-problem-'+id} items={sections} setItems={setSections}/>},
     {title: 'FollowUp Sections', component: <
-      FolowUpSections items={followUpSections} setItems={setFollwUpSections}/>}
+      FolowUpSections problemId={subject+'-problem-'+id} items={followUpSections} setItems={setFollwUpSections}/>}
   ]
 
   const [currentPart, setCurrentPart] = useState(0);

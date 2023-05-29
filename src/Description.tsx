@@ -10,11 +10,12 @@ export const emptyDescription: IContent = {
 };
 
 interface DescriptionProps {
+  fathersId: string
   items: IContent;
   setItems: React.Dispatch<React.SetStateAction<IContent>>;
 };
 
-const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
+const Description: React.FC<DescriptionProps> = ({fathersId, items, setItems}) => {
     const elements = [
       <TextInput item={items['id']} itemNmae='id' 
         onChange={(e) => handleInputChange('id', e.target.value)}/>,
@@ -33,7 +34,10 @@ const Description: React.FC<DescriptionProps> = ({items, setItems}) => {
         newItems[field] = value;
         setItems(newItems);
       };
-
+      
+    if(items['id'] !==  fathersId + '-description'){
+      handleInputChange('id', fathersId + '-description')
+    }
     return (
         <div>
           {elements.map(element => (

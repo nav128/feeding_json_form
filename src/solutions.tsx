@@ -4,7 +4,7 @@ import GenericList, { handleListElementChange } from './HandleLists.tsx'
 //@ts-ignore
 import { ISolution, contentType, solutionType } from './types.tsx';
 //@ts-ignore
-import { TextArea, TextInput } from './utils.tsx';
+import { TextArea, TextInput, alignIdListItems } from './utils.tsx';
 
 
 export const emptySolution: ISolution = {
@@ -44,11 +44,12 @@ const Solution: React.FC<SolutionProps> = ({item, handleChange}) => {
 
 
 interface SolutionsProps {
+  sectionId: string
   items: ISolution[];
   setItems: React.Dispatch<React.SetStateAction<ISolution[]>>;
 }
 
-const  Solutions: React.FC<SolutionsProps> = ({items, setItems}) => {
+const  Solutions: React.FC<SolutionsProps> = ({sectionId, items, setItems}) => {
   if (items.length !== 2) {
     throw new Error('solutions list must have exactly 2 lements. got ' + items.length);
   };
@@ -59,10 +60,12 @@ const  Solutions: React.FC<SolutionsProps> = ({items, setItems}) => {
     const [conscie, full] = items
     conscie['solutionType'] = solutionType.CONCISE
     full['solutionType'] = solutionType.FULL
-    
+
     setItems([conscie, full])
-  }
-  setSolutionTypes()
+  };
+  setSolutionTypes();
+
+  alignIdListItems(items, setItems, sectionId + '-solution-')
   const elements = [
     {title: 'Solution 1', 
       component: <Solution item={items[0]} handleChange={handleListElementChange(items, setItems, 0)} />},

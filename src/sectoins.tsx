@@ -8,7 +8,7 @@ import Answers, {emptyAnswere} from "./answers.tsx";
 //@ts-ignore
 import Solutions, {emptySolution} from "./solutions.tsx";
 //@ts-ignore
-import {TextInput, NumberInput, mimicSetitemRecordElement, mimicSetitemListElement} from './utils.tsx'
+import {TextInput, NumberInput, mimicSetitemRecordElement, mimicSetitemListElement, alignIdListItems} from './utils.tsx'
 //@ts-ignore
 import { ISection} from './types.tsx';
 
@@ -45,7 +45,7 @@ const  Section: React.FC<SectionProps> = ({item, setItem}) => {
             <NumberInput item={item['score']} itemNmae='score' setItem={setScore}/>
         </div>
         <div><label>Section Description</label>
-            <Description items={item['sectionDescription']} setItems = {setSD}/>
+            <Description fathersId={item['id']} items={item['sectionDescription']} setItems = {setSD}/>
         </div>
         <div>
         <TextInput item={item['sectionType']} itemNmae='sectionType' setItem={setSectionType}/>
@@ -55,27 +55,30 @@ const  Section: React.FC<SectionProps> = ({item, setItem}) => {
      
         </div>
         <div><label>Answers List</label>
-            <Answers items = {item['answersList']} setItems = {setAnswers}
+            <Answers sectionId={item['id']} items = {item['answersList']} setItems = {setAnswers}
             linkToFollowUpSection='enableLinkToFollwUpSection'/>
         </div>
         <div><label>Solutions</label>
         {/* since item['solutions'] can be undefined in 'ISection' */}
             {/* @ts-ignore */}                            
-            <Solutions items={item['solutions']} setItems = {setSolutions}/>
+            <Solutions sectionId={item['id']} items={item['solutions']} setItems = {setSolutions}/>
         </div>
     </div>
 };
 
 interface SectionsProps {
+    problemId: string
     items: ISection[]
     setItems: React.Dispatch<React.SetStateAction<ISection[]>>;
   };
 
-const Sections: React.FC<SectionsProps> = ({items, setItems}) =>{
+const Sections: React.FC<SectionsProps> = ({problemId, items, setItems}) =>{
 
     if(items.length !== 4){
         throw new Error('Sections list should have exactly 4 elements, Got ' + items.length)
     }
+
+    alignIdListItems(items, setItems, problemId + '-sections-')    
     const formParts = [
         { title: 'Section 1', component: <
             Section item={items[0]} setItem={mimicSetitemListElement(items, setItems, 0)}/>},
