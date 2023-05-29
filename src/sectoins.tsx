@@ -42,7 +42,7 @@ const  Section: React.FC<SectionProps> = ({item, setItem}) => {
             <TextInput item={item['id']} itemNmae='id' setItem={setId}/>
         </div>
         <div>
-        {<NumberInput item={item['score']} itemNmae='score' setItem={setScore}/>}
+            <NumberInput item={item['score']} itemNmae='score' setItem={setScore}/>
         </div>
         <div><label>Section Description</label>
             <Description items={item['sectionDescription']} setItems = {setSD}/>
@@ -55,10 +55,12 @@ const  Section: React.FC<SectionProps> = ({item, setItem}) => {
      
         </div>
         <div><label>Answers List</label>
-            <Answers items = {item['answersList']} setItems = {setAnswers}/>
+            <Answers items = {item['answersList']} setItems = {setAnswers}
+            linkToFollowUpSection='enableLinkToFollwUpSection'/>
         </div>
         <div><label>Solutions</label>
-            {/* @ts-ignore */}// since item['solutions'] can be undefined in 'ISection'                            
+        {/* since item['solutions'] can be undefined in 'ISection' */}
+            {/* @ts-ignore */}                            
             <Solutions items={item['solutions']} setItems = {setSolutions}/>
         </div>
     </div>
@@ -95,7 +97,7 @@ const Sections: React.FC<SectionsProps> = ({items, setItems}) =>{
         setCurrentPart((prevPart) => prevPart - 1);
       };
     return (
-    <div>
+    <div style={{overflowY: 'scroll', maxHeight: '500px'}}>
         <h3>{formParts[currentPart].title}</h3>
         {formParts[currentPart].component}
         <button onClick={handlePrevious} disabled={currentPart === 0}>

@@ -54,11 +54,12 @@ const  Solutions: React.FC<SolutionsProps> = ({items, setItems}) => {
   };
   
   const setSolutionTypes = () => {
-    console.log(items[0])
     if (items[0]['solutionType'] !== '') {return};
+
     const [conscie, full] = items
     conscie['solutionType'] = solutionType.CONCISE
     full['solutionType'] = solutionType.FULL
+    
     setItems([conscie, full])
   }
   setSolutionTypes()
@@ -72,7 +73,7 @@ const  Solutions: React.FC<SolutionsProps> = ({items, setItems}) => {
   return (
     <div>
       {elements.map(element => (
-      <div><label>{element.title}</label>{element.component}</div>))}
+      <div>{element.component}</div>))}
     </div>
   )
 };
