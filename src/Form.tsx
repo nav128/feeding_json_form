@@ -41,14 +41,14 @@ const Form: React.FC = () => {
       <div><TextInput item={id} itemNmae='problem number' setItem={setId}/></div>
       <div><TextInput item={image} itemNmae='image' setItem={setImage}/></div>
       <div><NumberInput item={score} itemNmae='score' setItem={setScore}/></div>
-      <div><h4>Problem Description</h4>
+      <div><h4 style={{margin: '5px'}}>Problem Description</h4>
         <Description fathersId={subject+'-problem-'+id} items={problemDescription} setItems={setDescription}/>
         </div>
       <Tags items={problemTags} setItems={setTags}/>
     </div>},
     {title: 'Sections', component: <Sections problemId={subject+'-problem-'+id} items={sections} setItems={setSections}/>},
-    {title: 'FollowUp Sections', component: <
-      FolowUpSections problemId={subject+'-problem-'+id} items={followUpSections} setItems={setFollwUpSections}/>}
+    {title: 'FollowUp Sections', component: <FolowUpSections 
+      problemId={subject+'-problem-'+id} items={followUpSections} setItems={setFollwUpSections}/>}
   ]
 
   const [currentPart, setCurrentPart] = useState(0);
@@ -92,7 +92,7 @@ const Form: React.FC = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-      <h2>{formParts[currentPart].title}</h2>
+      <h2 style={{marginBottom: '5px'}}>{formParts[currentPart].title}</h2>
         {formParts[currentPart].component}
         {currentPart !== 0 && 
         <button onClick={handlePrevious}> {'<-'} {formParts[currentPart-1].title}
@@ -102,7 +102,7 @@ const Form: React.FC = () => {
           </button>}
       </div>
       {currentPart === formParts.length-1 && showErrorMessage &&
-         <div>Missing Some Fields, Forgot to Save?</div>
+         <div>Missing Some Fields.</div>
          }
       {currentPart === formParts.length-1 &&
         <div><button type="submit" onClick={handleSubmitClik}>Save To File</button></div>

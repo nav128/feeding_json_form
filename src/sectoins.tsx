@@ -56,7 +56,7 @@ const  Section: React.FC<SectionProps> = ({item, setItem}) => {
         </div>
         <div><label>Answers List</label>
             <Answers sectionId={item['id']} items = {item['answersList']} setItems = {setAnswers}
-            linkToFollowUpSection='enableLinkToFollwUpSection'/>
+            inMainSection={true}/>
         </div>
         <div><label>Solutions</label>
         {/* since item['solutions'] can be undefined in 'ISection' */}
@@ -65,6 +65,15 @@ const  Section: React.FC<SectionProps> = ({item, setItem}) => {
         </div>
     </div>
 };
+
+
+// Validations
+const validateScore = (sections: ISection[]) => {
+    if(sections.some(section => section.score === 0)){return {'status': 'inProgress'}}
+    const totalScore: number = sections.reduce((acc, section) => acc + section.score , 0)
+    return {'status': totalScore === 100? 'good': 'bad', 'total': totalScore}
+}
+
 
 interface SectionsProps {
     problemId: string
@@ -78,7 +87,8 @@ const Sections: React.FC<SectionsProps> = ({problemId, items, setItems}) =>{
         throw new Error('Sections list should have exactly 4 elements, Got ' + items.length)
     }
 
-    alignIdListItems(items, setItems, problemId + '-sections-')    
+    alignIdListItems(items, setItems, problemId + '-sections-')
+      
     const formParts = [
         { title: 'Section 1', component: <
             Section item={items[0]} setItem={mimicSetitemListElement(items, setItems, 0)}/>},
@@ -101,7 +111,7 @@ const Sections: React.FC<SectionsProps> = ({problemId, items, setItems}) =>{
       };
     return (
     <div style={{overflowY: 'scroll', maxHeight: '500px'}}>
-        <h3>{formParts[currentPart].title}</h3>
+        <h3 style={{marginTop: '5px'}}>{formParts[currentPart].title}</h3>
         {formParts[currentPart].component}
         <button onClick={handlePrevious} disabled={currentPart === 0}>
             Previous
@@ -109,6 +119,9 @@ const Sections: React.FC<SectionsProps> = ({problemId, items, setItems}) =>{
         <button onClick={handleNext} disabled={currentPart === formParts.length - 1}>
             Next
       </button>
+      {validateScore(items).status === 'bad' &&
+      <p style={{fontSize: '14px', margin: '4px', color: 'red'}}>
+      Significans (score) of the 4 sections should add up to 100%</p>}
     </div>
     )
 };

@@ -32,15 +32,19 @@ const Tag: React.FC<TagProps> = ({item, handleChange, label, removeMe}) => {
     )
 }
 
-interface TagsProps {
-  items: ITag[];
-  setItems: React.Dispatch<React.SetStateAction<ITag[]>>;
-}
 
+
+// Validations
 const isTagsScoreValid = (tagsList: ITag[]) => {
   if(tagsList.length === 0){return true}
   const totalScore: number = tagsList.reduce((acc, tag) => acc + tag.score , 0)
   return totalScore === 100
+}
+
+
+interface TagsProps {
+  items: ITag[];
+  setItems: React.Dispatch<React.SetStateAction<ITag[]>>;
 }
 
 const  Tags: React.FC<TagsProps> = ({items, setItems}) => {
@@ -54,7 +58,8 @@ const  Tags: React.FC<TagsProps> = ({items, setItems}) => {
     </div>,
     <div>
       {!isTagsScoreValid(items) &&
-      <p>Significans (score) of all taged subjects should add up to 100%</p>}
+      <p style={{fontSize: '14px', margin: '4px', color: 'red'}}>
+        Significans (score) of all taged subjects should add up to 100%</p>}
       <button type="button" onClick={() => handleAddItem(items, setItems, emptyTag)}>
         Add Tag
       </button>

@@ -48,7 +48,7 @@ export const TextInput: React.FC<inputTemplateProps> = ({item, itemNmae, setItem
 export const TextArea: React.FC<inputTemplateProps> = ({item, itemNmae, setItem, onChange}) => {
   return( <textarea
     className='text-area'
-    // style={{ marginTop: '5px' }}
+    style={{marginBottom: '-3.5px', height: '15px', width: '200px'}}
     key={itemNmae}
     value={item}
     placeholder={itemNmae}
@@ -57,8 +57,13 @@ export const TextArea: React.FC<inputTemplateProps> = ({item, itemNmae, setItem,
 
 
 interface inputEnumTemplateProps {
-  item: string| undefined, itemNmae: string, setItem?: any, onChange?: any, id: string
+  item: string| undefined, itemNmae: string, setItem?: any, onChange?: any, id: string 
 };
+
+export const isEnumInput = (enumObj, e) => {
+  return Object.values(enumObj).includes(e.target.value);
+}
+
 export const TextEnumInput: React.FC<inputEnumTemplateProps> = ({item, itemNmae, setItem, onChange, id}) => {
   return( <input
     key={itemNmae}

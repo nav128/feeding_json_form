@@ -4,7 +4,7 @@ import { handleListElementChange } from './HandleLists.tsx'
 //@ts-ignore
 import { IAnswer, answerType } from './types.tsx';
 //@ts-ignore
-import { TextArea, TextEnumInput, TextInput, alignIdListItems } from './utils.tsx';
+import { TextArea, TextEnumInput, TextInput, alignIdListItems, deepCopy, isEnumInput } from './utils.tsx';
 
 
 export const emptyAnswere: IAnswer = {
@@ -15,60 +15,100 @@ export const emptyAnswere: IAnswer = {
 interface answerProps {
   item: IAnswer
   handleChange: (field: string, value: string | number) => void
-  linkFollowupSection?: string
+  enableLink: boolean
+  handleLinkUnlink: (answerId: string, operation: string) => void
 }
 
-const Answer :React.FC<answerProps> = ({item, handleChange, linkFollowupSection}) => {
+const Answer :React.FC<answerProps> = ({item, handleChange, enableLink, handleLinkUnlink}) => {
 
   return (
   <div>
     <TextInput item={item['id']} itemNmae={'id'} 
       onChange={(e) => handleChange('id', e.target.value)}/>
-    <TextEnumInput item={item['answerType']} itemNmae={'answerType'} 
-      onChange={(e) => handleChange('answerType', e.target.value)} id='answerType'/>
+    <TextEnumInput item={item['answerType']} itemNmae={'answerType'} id='answerType'
+      onChange={(e) => {if(!isEnumInput(answerType, e)) e.target.value = ''; 
+                        handleChange('answerType', e.target.value)}}/>
     <datalist id='answerType'>
       {Object.values(answerType).map((value) => <option value={value}/>)}</datalist>
-    { Object.keys(item).includes('relatedSectionId') &&
-      <TextInput item={item['relatedSectionId']} itemNmae={'relatedSectionId'} 
-        onChange={(e) => handleChange('relatedSectionId', e.target.value)}/>
-    }
-    {(linkFollowupSection && item['answerType'] === answerType.INCORRECT) &&
-      <button>{linkFollowupSection}</button>}
     <TextArea item={item['content']} itemNmae={'content'} 
       onChange={(e) => handleChange('content', e.target.value)}/>
+    {(enableLink && item['answerType'] === answerType.INCORRECT) &&
+    <div>
+      <button onClick={() => handleLinkUnlink(item['id'], 'link')}>Add FollowUp Section</button>
+      </div>
+      }
+    { item.relatedSectionId !== undefined &&
+      <div><TextInput item={item['relatedSectionId']} itemNmae={'relatedSectionId'} 
+        onChange={(e) => {/*handleChange('relatedSectionId', e.target.value)*/}}/>
+        <button onClick={() => handleLinkUnlink(item['id'], 'unlink')}>Remove FollowUp Section</button>
+        </div>
+    }
+    
   </div>
   )
 };
+
+// Validations
+const validateHasFollowUpSectin = (answers: IAnswer[]) => {
+  return answers.some(answer =>
+    answer.answerType === answerType.INCORRECT && answer.relatedSectionId !== undefined)
+}
+
+// const validate
+
 
 interface AnswersProps {
   sectionId: string
   items: IAnswer[];
   setItems: React.Dispatch<React.SetStateAction<Array<IAnswer>>>;
-  linkToFollowUpSection?: string
+  inMainSection?: boolean
 }
 
-const  Answers: React.FC<AnswersProps> = ({sectionId, items, setItems, linkToFollowUpSection}) => {
+const  Answers: React.FC<AnswersProps> = ({sectionId, items, setItems, inMainSection}) => {
   if(items.length !== 4){
     throw new Error('Answers list must have exactly 4 elements, Got ' + items.length)
   }
 
-  alignIdListItems(items, setItems, sectionId + '-answer-')
+  alignIdListItems(items, setItems, sectionId + '-answer-');
+
+  const handleLinkToFollowUpSection = (answerId: string, operation: string) => {
+    if(sectionId.includes('follow-up-sections')){
+      throw new Error('there should be no follow-up to a follow-up section');
+    };
+    const getRelatedSectionId = () => {
+      const parts: string[] = sectionId.split('sections');
+      return parts[0] + 'follow-up-sections' + parts[1]
+    };
+  
+    const getIndexFromId = (listElementId: string): number => {
+      const splited: string[] = listElementId.split('-');
+      return parseInt(splited[splited.length -1]);
+    };
+
+    const index = getIndexFromId(answerId);
+    const newItems: IAnswer[] = [...items];
+    newItems[index] = {...newItems[index], 
+      'relatedSectionId': operation === 'link'? getRelatedSectionId(): undefined};
+    setItems(newItems);
+  }
 
   let enableLinkToFollwUpSection: boolean = false
-  if(linkToFollowUpSection 
-    // check that no answers is linked to a FollwUpSection
+  if(inMainSection 
+    // check that no answer is linked to a FollwUpSection
       && items.every(answer => answer.relatedSectionId === undefined)){
-        console.log(linkToFollowUpSection);
         enableLinkToFollwUpSection = true;
       }
 
   return(<div>
     {items.map((answer, index) => (
       <div style={{display: 'flex', alignItems: 'center'}}>
-        <label style={{marginRight: '5px'}}>{index + 1} </label>
-      <Answer item={answer} 
+        <label style={{marginRight: '5px'}}>{index + 1}</label>
+      <Answer 
+          item={answer} 
           handleChange={handleListElementChange(items, setItems, index)} 
-          linkFollowupSection={enableLinkToFollwUpSection? linkToFollowUpSection: undefined}/></div>
+          enableLink={enableLinkToFollwUpSection}
+          handleLinkUnlink={handleLinkToFollowUpSection}
+        /></div>
     ))}
   </div>)
 };
