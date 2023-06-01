@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 //@ts-ignore
-import { handleAddItem, handleListElementChange, handleRemoveItem } from './HandleLists.tsx'
+import { handleAddItem, handleRemoveItem } from './HandleLists.tsx'
 import { ITag } from './types';
 //@ts-ignore
-import { NumberInput, TextInput } from './utils.tsx';
+import { NumberInput, TextInput, mimicSetitemListElement, mimicSetitemRecordElement } from './utils.tsx';
 
 
 export const emptyTag:ITag = {
@@ -12,21 +12,21 @@ export const emptyTag:ITag = {
 
 interface TagProps {
   item: ITag
-  handleChange: (field: string, value: string | number) => void
+  setItem: (value: string | number) => void
   label: string
   removeMe: () => void
 };
 
-const Tag: React.FC<TagProps> = ({item, handleChange, label, removeMe}) => {
+const Tag: React.FC<TagProps> = ({item, setItem, label, removeMe}) => {
 
     return (
       <div><label>{label}</label>
         <TextInput item={item['id']} itemNmae='id' 
-          onChange={(e) => handleChange('id', e.target.value)}/>
+          setItem={mimicSetitemRecordElement(item, setItem, 'id')}/>
         <TextInput item={item['title']} itemNmae='title' 
-          onChange={(e) => handleChange('title', e.target.value)}/>
+          setItem={mimicSetitemRecordElement(item, setItem, 'title')}/>
         <NumberInput item={item['score']} itemNmae='score' 
-          onChange={(e) => handleChange('score', parseFloat(e.target.value))}/>
+          setItem={mimicSetitemRecordElement(item, setItem, 'score')}/>
         <button type="button" onClick={removeMe}>Remove</button>
       </div>
     )
@@ -52,7 +52,7 @@ const  Tags: React.FC<TagsProps> = ({items, setItems}) => {
   const elements = [
     <div>{items.map((item: ITag, index: number) => (
       <div>
-        <Tag item={item} handleChange={handleListElementChange(items, setItems, index)}
+        <Tag item={item} setItem={mimicSetitemListElement(items, setItems, index)}
             label={'Tag ' + index} removeMe={() => handleRemoveItem(index,  items, setItems)}/>
         </div>))}
     </div>,

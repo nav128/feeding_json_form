@@ -45,7 +45,7 @@ const  Section: React.FC<SectionProps> = ({item, setItem}) => {
             <NumberInput item={item['score']} itemNmae='score' setItem={setScore}/>
         </div>
         <div><label>Section Description</label>
-            <Description fathersId={item['id']} items={item['sectionDescription']} setItems = {setSD}/>
+            <Description fathersId={item['id']} item={item['sectionDescription']} setItem = {setSD}/>
         </div>
         <div>
         <TextInput item={item['sectionType']} itemNmae='sectionType' setItem={setSectionType}/>

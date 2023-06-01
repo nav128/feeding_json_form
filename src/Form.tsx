@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { saveAs } from 'file-saver';
-//@ts-ignore
+// @ts-ignore
+import {Dumb} from './text_editor'
+// @ts-ignore
 import Tags from './Tags.tsx';
 //@ts-ignore
 import Sections, { emptySection } from './sectoins.tsx';
@@ -13,6 +15,10 @@ import Description, {emptyDescription } from './Description.tsx';
 import FolowUpSections, { emptyFolowUpSection }  from './followUpSections.tsx';
 //@ts-ignore
 import {ITag, ISection, IProblem, IContent} from './types.tsx';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { reactInlineMath } from 'react-katex';
+import 'katex/dist/katex.min.css';
 
 
 const Form: React.FC = () => {
@@ -42,7 +48,7 @@ const Form: React.FC = () => {
       <div><TextInput item={image} itemNmae='image' setItem={setImage}/></div>
       <div><NumberInput item={score} itemNmae='score' setItem={setScore}/></div>
       <div><h4 style={{margin: '5px'}}>Problem Description</h4>
-        <Description fathersId={subject+'-problem-'+id} items={problemDescription} setItems={setDescription}/>
+        <Description fathersId={subject+'-problem-'+id} item={problemDescription} setItem={setDescription}/>
         </div>
       <Tags items={problemTags} setItems={setTags}/>
     </div>},
@@ -94,6 +100,9 @@ const Form: React.FC = () => {
       <div>
       <h2 style={{marginBottom: '5px'}}>{formParts[currentPart].title}</h2>
         {formParts[currentPart].component}
+        {/* @ts-ignore */}
+        {/* <ReactQuill theme="snow" 
+         value={id} onChange={setId}/> */}
         {currentPart !== 0 && 
         <button onClick={handlePrevious}> {'<-'} {formParts[currentPart-1].title}
           </button>}

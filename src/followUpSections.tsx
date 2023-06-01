@@ -38,7 +38,7 @@ const  FolowUpSection: React.FC<IfollowUpSectionProps> = ({item, setItem}) => {
         <TextInput item={item['id']} itemNmae='id' setItem={setId}/>
         </div>
         <div><label>Section Description</label>
-            <Description fathersId={item['id']} items = {item['sectionDescription']} setItems = {setSD}/>
+            <Description fathersId={item['id']} item = {item['sectionDescription']} setItem = {setSD}/>
         </div>
         <div>
         <TextInput item={item['sectionType']} itemNmae='sectionType' setItem={setSectionType}/>
