@@ -1,10 +1,8 @@
 import React from 'react';
 //@ts-ignore
-import { handleListElementChange } from './HandleLists.tsx'
-//@ts-ignore
 import { IAnswer, answerType } from './types.tsx';
 //@ts-ignore
-import { TextArea, TextEnumInput, TextInput, alignIdListItems, deepCopy, isEnumInput } from './utils.tsx';
+import { TextArea, TextEnumInput, TextInput, alignIdListItems, deepCopy, isEnumInput, mimicSetitemListElement, mimicSetitemRecordElement } from './utils.tsx';
 
 
 export const emptyAnswere: IAnswer = {
@@ -14,24 +12,24 @@ export const emptyAnswere: IAnswer = {
 
 interface answerProps {
   item: IAnswer
-  handleChange: (field: string, value: string | number) => void
+  setItem: (value: string | number) => void
   enableLink: boolean
   handleLinkUnlink: (answerId: string, operation: string) => void
 }
 
-const Answer :React.FC<answerProps> = ({item, handleChange, enableLink, handleLinkUnlink}) => {
+const Answer :React.FC<answerProps> = ({item, setItem, enableLink, handleLinkUnlink}) => {
 
   return (
   <div>
     <TextInput item={item['id']} itemNmae={'id'} 
-      onChange={(e) => handleChange('id', e.target.value)}/>
+      setItem={mimicSetitemRecordElement(item, setItem, 'id')}/>
     <TextEnumInput item={item['answerType']} itemNmae={'answerType'} id='answerType'
       onChange={(e) => {if(!isEnumInput(answerType, e)) e.target.value = ''; 
-                        handleChange('answerType', e.target.value)}}/>
+              {mimicSetitemRecordElement(item, setItem, 'id')}(e.target.value)}}/>
     <datalist id='answerType'>
       {Object.values(answerType).map((value) => <option value={value}/>)}</datalist>
     <TextArea item={item['content']} itemNmae={'content'} 
-      onChange={(e) => handleChange('content', e.target.value)}/>
+        setItem={mimicSetitemRecordElement(item, setItem, 'answerType')}/>
     {(enableLink && item['answerType'] === answerType.INCORRECT) &&
     <div>
       <button onClick={() => handleLinkUnlink(item['id'], 'link')}>Add FollowUp Section</button>
@@ -39,7 +37,7 @@ const Answer :React.FC<answerProps> = ({item, handleChange, enableLink, handleLi
       }
     { item.relatedSectionId !== undefined &&
       <div><TextInput item={item['relatedSectionId']} itemNmae={'relatedSectionId'} 
-        onChange={(e) => {/*handleChange('relatedSectionId', e.target.value)*/}}/>
+        setItem={() => {}}/>
         <button onClick={() => handleLinkUnlink(item['id'], 'unlink')}>Remove FollowUp Section</button>
         </div>
     }
@@ -105,7 +103,7 @@ const  Answers: React.FC<AnswersProps> = ({sectionId, items, setItems, inMainSec
         <label style={{marginRight: '5px'}}>{index + 1}</label>
       <Answer 
           item={answer} 
-          handleChange={handleListElementChange(items, setItems, index)} 
+          setItem={mimicSetitemListElement(items, setItems, index)} 
           enableLink={enableLinkToFollwUpSection}
           handleLinkUnlink={handleLinkToFollowUpSection}
         /></div>

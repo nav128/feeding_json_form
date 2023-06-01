@@ -61,8 +61,7 @@ export interface IAnswer {
   
 // should add Add Image button upload localy
 // content field should support reach text
-// in sections-> answers each answer should not have a relatedSectionId 
-//    but if it is in correct he should be able to add a followUpSection
+
 
 
 

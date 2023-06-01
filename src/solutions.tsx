@@ -1,10 +1,8 @@
 import React from 'react';
 //@ts-ignore
-import GenericList, { handleListElementChange } from './HandleLists.tsx'
-//@ts-ignore
 import { ISolution, contentType, solutionType } from './types.tsx';
 //@ts-ignore
-import { TextArea, TextInput, alignIdListItems } from './utils.tsx';
+import { TextArea, TextInput, alignIdListItems, mimicSetitemListElement, mimicSetitemRecordElement } from './utils.tsx';
 
 
 export const emptySolution: ISolution = {
@@ -14,23 +12,23 @@ export const emptySolution: ISolution = {
 
 interface SolutionProps {
   item: ISolution
-  handleChange: (field: string, value: string | number) => void
+  setItem: (value: string | number) => void
 };
 
-const Solution: React.FC<SolutionProps> = ({item, handleChange}) => {
+const Solution: React.FC<SolutionProps> = ({item, setItem}) => {
     const elements = [
       <div>
         <TextInput item={item['id']} itemNmae='id' 
-          onChange={(e) => handleChange('id', e.target.value)}/>
+          setItem={mimicSetitemRecordElement(item, setItem, 'id')}/>
         <TextInput item={item['solutionType']} itemNmae='solutionType' 
-          onChange={(e) => {}}/>
+          setItem={() => {}}/>
         <TextInput item={item['title']} itemNmae='title' 
-          onChange={(e) => handleChange('title', e.target.value)}/>
+          setItem={mimicSetitemRecordElement(item, setItem, 'title')}/>
         <TextInput item={item['contentType']} itemNmae='contentType' 
-          onChange={(e) => handleChange('contentType', e.target.value)}/>
+          setItem={mimicSetitemRecordElement(item, setItem, 'contentType')}/>
       </div>,
       <TextArea item={item['content']} itemNmae='content' 
-        onChange={(e) => handleChange('content', e.target.value)}/>
+          setItem={mimicSetitemRecordElement(item, setItem, 'content')}/>
     ];
 
     return (
@@ -68,9 +66,9 @@ const  Solutions: React.FC<SolutionsProps> = ({sectionId, items, setItems}) => {
   alignIdListItems(items, setItems, sectionId + '-solution-')
   const elements = [
     {title: 'Solution 1', 
-      component: <Solution item={items[0]} handleChange={handleListElementChange(items, setItems, 0)} />},
+      component: <Solution item={items[0]} setItem={mimicSetitemListElement(items, setItems, 0)} />},
     {title: 'Solution 2',
-      component: <Solution item={items[1]} handleChange={handleListElementChange(items, setItems, 1)} />}
+      component: <Solution item={items[1]} setItem={mimicSetitemListElement(items, setItems, 1)} />}
   ]
   
   return (
